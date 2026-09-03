@@ -105,8 +105,9 @@ configuración, procesos, puertos, logs ni accesos directos.
     documentos y el de material interactivo — el instalador debe
     comprobarlo y negarse a instalar si no se cumple, con un mensaje que lo
     diga.
-11. **La app self-contained pesa lo que pesa** (del orden de 150-200 MB:
-    hay medido 155 MB en una compilación Debug local), porque
+11. **La app self-contained pesa lo que pesa** (medido en Release con
+    ReadyToRun: **290 MB, 626 archivos**; la estimación inicial de 150-200 MB
+    salía de una compilación Debug y se quedaba corta), porque
     `WindowsAppSDKSelfContained=true` mete dentro del propio instalador el
     tiempo de ejecución del SDK de aplicaciones de Windows. Eso es
     deliberado — así el equipo maestro no depende de nada preinstalado — y
@@ -223,6 +224,11 @@ Antes de instalar, comprobar automáticamente:
   no reinstalar a ciegas encima)
 - procesos activos de `Avacom.Biblioteca.App.exe` (si esta corriendo, pedir
   cerrarla antes de continuar — no matarla por su cuenta)
+- **longitud de la ruta de instalación** (máximo 180 caracteres). El archivo
+  con el nombre más largo del payload ocupa 75 y Windows corta en 260.
+  Descubierto probando: en una ruta larga los 629 archivos se copian sin un
+  solo error y después la aplicación arranca y se cierra sola, sin ventana,
+  sin mensaje y sin registro de crash. La ruta por defecto usa 36.
 
 **Lo que NO hay que validar, a diferencia de OPS Master**: puerto 8000 (no
 existe ese puerto aquí), ni nada de Firewall, ni nada de un runtime de

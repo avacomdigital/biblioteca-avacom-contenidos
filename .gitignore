@@ -29,3 +29,8 @@ desktop.ini
 
 __pycache__/
 *.pyc
+
+# Instalador: el payload lo genera dotnet publish y el .exe lo genera Inno Setup.
+# Ninguno de los dos se versiona: se reconstruyen con installer\construir.ps1
+installer/payload/
+installer/dist/

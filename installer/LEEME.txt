@@ -1,0 +1,129 @@
+AVACOM Biblioteca · el instalador
+=================================
+
+Para quien construye la distribución. El profesor no ve nada de esto: recibe
+un solo archivo .exe y hace doble clic.
+
+
+Construirlo
+-----------
+
+    powershell -ExecutionPolicy Bypass -File construir.ps1
+
+Tarda unos minutos: publica la aplicación en Release (compila ReadyToRun) y
+después comprime 290 MB con LZMA2. Deja el resultado en:
+
+    installer\dist\AVACOM-Biblioteca-0.1.0-setup.exe    (77 MB)
+
+Si ya publicaste antes y solo tocaste el script del instalador:
+
+    powershell -ExecutionPolicy Bypass -File construir.ps1 -SoloCompilar
+
+Hace falta Inno Setup 6. Si no está:
+
+    winget install --id JRSoftware.InnoSetup
+
+Ojo: winget lo instala POR USUARIO, en
+%LOCALAPPDATA%\Programs\Inno Setup 6\, no en Program Files. El guion busca en
+los tres sitios posibles, así que da igual cómo esté puesto.
+
+
+Qué hay en cada archivo
+-----------------------
+
+  avacom-biblioteca.iss   El instalador. Los comentarios de arriba del archivo
+                          explican las tres decisiones que no se pueden
+                          deshacer sin romper el producto.
+
+  construir.ps1           Publica y compila. Comprueba antes que la aplicación
+                          no esté abierta y después que no se haya colado
+                          ningún artefacto MSIX en el payload.
+
+  payload\                Lo genera dotnet publish. No se versiona.
+
+  dist\                   El instalador terminado. No se versiona.
+
+
+Tres cosas que parecen detalles y no lo son
+-------------------------------------------
+
+1. NO SE EMPAQUETA COMO MSIX, Y NO ES UN DESCUIDO.
+
+   La aplicación se compila con WindowsPackageType=None. Una app empaquetada
+   corre dentro del aislamiento de red de Windows, que bloquea las conexiones
+   al propio equipo, y tanto el servidor de medios como la API local escuchan
+   justo ahí, en 127.0.0.1. Empaquetarla la dejaría sin reproducir vídeo y sin
+   poder hablar con AVACOM OPS Master.
+
+   construir.ps1 comprueba que no aparezca ningún .msix ni AppxManifest.xml en
+   el payload, y para si los encuentra.
+
+2. LA RUTA DE INSTALACIÓN NO PUEDE SER LARGA.
+
+   El archivo con el nombre más largo del payload ocupa 75 caracteres, y
+   Windows corta en 260. El instalador rechaza rutas de más de 180.
+
+   Este límite se puso después de tropezar con él: instalando en una carpeta
+   de ruta larga, los 629 archivos se copiaron sin un solo error, y después la
+   aplicación arrancaba y se cerraba sola, sin ventana, sin mensaje y sin
+   registro de crash en el visor de sucesos. La ruta por defecto usa 36
+   caracteres, así que en una instalación normal no se acerca al límite.
+
+3. %ProgramData%\AVACOM\ ES TERRITORIO COMPARTIDO.
+
+   Ahí la aplicación deja enlace.json, que es como el backend de AVACOM OPS
+   Master la encuentra. Dos consecuencias:
+
+   · La carpeta se crea con permisos de MODIFICACIÓN para los usuarios, no de
+     solo lectura. La aplicación corre como el profesor, que normalmente no es
+     administrador, y tiene que poder escribir esa nota en cada arranque. Con
+     solo lectura, la nota no se crearía nunca y OPS Master concluiría que no
+     hay contenido instalado, sin ningún error que lo explicara.
+
+   · Al desinstalar, la carpeta solo se retira si AVACOM OPS Master ya no está
+     en el equipo. Se comprueban DOS sitios: Program Files y ProgramData. En
+     una máquina real se encontró %ProgramData%\AVACOM\OPS Master con datos del
+     otro producto mientras Program Files estaba vacío.
+
+
+Lo que este instalador NO hace, a propósito
+-------------------------------------------
+
+  · No instala ningún servicio de Windows. La API vive dentro del proceso de la
+    aplicación y muere cuando el profesor la cierra.
+
+  · No abre ningún puerto en el Firewall. El puerto es efímero, lo elige el
+    sistema en cada arranque, y solo escucha en loopback.
+
+  · No trae licencia, ni claves de nodo, ni paquetes de contenido. Emitir la
+    licencia de un equipo y publicar paquetes es del equipo técnico de
+    contenido; está en paquetes\COMO-CARGAR-CONTENIDO.txt.
+
+  · No trae Python. El aula no tiene Python y las herramientas de paquetes\ son
+    del equipo de contenido, no del equipo maestro.
+
+  · No borra el índice del equipo al desinstalar sin preguntar. Ahí está el
+    catálogo de lo que el aula tiene instalado, y perderlo obliga a reinstalar
+    todos los paquetes.
+
+
+Probar que quedó bien
+---------------------
+
+Después de instalar, en un equipo limpio y sin el SDK de .NET:
+
+  1. Abrir la aplicación DOS VECES, cerrándola entre medio. Las dos tiene que
+     abrir la ventana.
+
+     No es paranoia. Hubo un bug real en este proyecto (un contador de
+     identificador que reiniciaba en cada arranque y hacía chocar una clave
+     primaria de SQLite) que solo se manifestaba a partir del segundo arranque:
+     la primera vez, con la base limpia, funcionaba.
+
+  2. Con la aplicación abierta en la pestaña Catálogo, comprobar que existe
+     %ProgramData%\AVACOM\contenido\enlace.json y que la API responde:
+
+         powershell -ExecutionPolicy Bypass -File ..\consultar-api.ps1
+
+  3. Desinstalar y comprobar que la carpeta de programa desaparece pero
+     %LOCALAPPDATA%\AVACOM\world.avacom.biblioteca\ sigue ahí.

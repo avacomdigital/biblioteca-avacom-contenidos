@@ -33,6 +33,16 @@
 ; una instalacion que llena el disco al ultimo byte deja el equipo inservible.
 #define EspacioMinimoMB 700
 
+; El archivo con el nombre mas largo del payload ocupa 75 caracteres. Windows
+; corta en 260, asi que la carpeta de instalacion no puede pasar de 180 y
+; dejar margen. La ruta por defecto usa 36, de sobra.
+;
+; Esto NO es teorico: probando este instalador en una carpeta temporal de ruta
+; larga, los 629 archivos se copiaron sin un solo error y despues la aplicacion
+; arrancaba y se cerraba sola, sin ventana, sin mensaje y sin registro de crash
+; en el visor de sucesos. Exactamente el tipo de fallo que nadie sabe atribuir.
+#define RutaMaximaChars 180
+
 [Setup]
 ; AppId propio y distinto del de OPS Master: si coincidieran, desinstalar uno
 ; borraria la entrada del otro en Programas y caracteristicas.
@@ -126,7 +136,14 @@ end;
 
 function OpsMasterInstalado(): Boolean;
 begin
-  Result := DirExists(ExpandConstant('{autopf}\AVACOM\OPS Master'));
+  // Se miran los DOS sitios. Comprobar solo Program Files no basta: en una
+  // maquina real se encontro %ProgramData%\AVACOM\OPS Master con datos del
+  // otro producto mientras Program Files no tenia nada, porque OPS Master
+  // puede estar instalado en otra ruta o haber dejado su configuracion ahi.
+  // Con la comprobacion incompleta, este desinstalador habria intentado
+  // llevarse la carpeta compartida con los datos del vecino dentro.
+  Result := DirExists(ExpandConstant('{autopf}\AVACOM\OPS Master'))
+         or DirExists(ExpandConstant('{commonappdata}\AVACOM\OPS Master'));
 end;
 
 function EspacioLibreMB(): Int64;
@@ -186,6 +203,17 @@ begin
   else
     S := S + 'Instalacion previa   ninguna, sera una instalacion nueva' + #13#10;
 
+  // Ver el comentario de RutaMaximaChars arriba. Una ruta demasiado larga no
+  // da error al copiar: da una aplicacion que no abre y no dice por que.
+  if Length(ExpandConstant('{app}')) > {#RutaMaximaChars} then
+  begin
+    S := S + 'Ruta de instalacion  ' + IntToStr(Length(ExpandConstant('{app}')))
+           + ' caracteres, el maximo es {#RutaMaximaChars}  [DEMASIADO LARGA]' + #13#10;
+    ValidacionFallo := True;
+  end
+  else
+    S := S + 'Ruta de instalacion  ' + IntToStr(Length(ExpandConstant('{app}'))) + ' caracteres  [correcto]' + #13#10;
+
   // La coexistencia con OPS Master es lo esperado, no un conflicto. Se dice en
   // positivo a proposito: si el instalador insinuara un problema, alguien
   // acabaria desinstalando el otro producto para "arreglarlo".
@@ -227,6 +255,11 @@ begin
       MsgBox('AVACOM Biblioteca esta abierta.' + #13#10#13#10 +
              'Cierrala y vuelve a intentarlo. El instalador no la cierra por su cuenta ' +
              'para no interrumpir una clase en curso.', mbError, MB_OK)
+    else if Length(ExpandConstant('{app}')) > {#RutaMaximaChars} then
+      MsgBox('La ruta de instalacion es demasiado larga.' + #13#10#13#10 +
+             'Elige una mas corta, como C:\Program Files\AVACOM\Biblioteca. ' +
+             'Con una ruta larga los archivos se copian bien pero la aplicacion ' +
+             'no llega a abrir, y no da ningun mensaje que lo explique.', mbError, MB_OK)
     else
       MsgBox('Falta resolver algo de la lista antes de continuar.', mbError, MB_OK);
     Result := False;
