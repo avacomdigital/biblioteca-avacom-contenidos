@@ -1,0 +1,430 @@
+﻿AVACOM · inventario de la entrega
+=================================
+
+Que es cada archivo y por que esta.
+
+Orden de lectura recomendado para alguien que llega nuevo:
+
+    1. LEEME.txt                          que es esto y como se prueba
+    2. esquema/contenido.sql              que se guarda en disco
+    3. app-biblioteca/LEEME.txt           mapa del codigo
+    4. Avacom.Contenido/Paquetes/         como se abre un paquete
+    5. Avacom.Contenido/Medios/           como se reproduce sin descifrarlo entero
+
+
+===============================================================
+RAIZ
+===============================================================
+
+PROBAR-TODO.cmd
+    Doble clic. Lanza probar-todo.ps1 saltandose la politica de ejecucion de
+    guiones, solo para ese proceso. Es el punto de entrada para el que llega
+    nuevo.
+
+EJECUTAR-APLICACION.cmd
+    Doble clic. Arranca la aplicacion. Si no hay carpeta de trabajo, la prepara
+    antes. Entra en app-biblioteca antes de llamar a dotnet, porque el
+    global.json que fija la version del SDK vive ahi.
+
+probar-todo.ps1
+    Las siete etapas de la prueba. Para en la primera que falle y dice cual es.
+    Cada etapa explica que comprueba y por que importa.
+
+preparar-trabajo.ps1
+    Arma la carpeta trabajo\: genera medios si faltan, construye los dos
+    paquetes de ejemplo, los cifra, los firma, genera el par de claves del
+    equipo y emite su licencia. Todo se construye en una carpeta temporal local
+    y se copia al final, porque SQLite necesita bloqueo de archivos y en
+    unidades de red falla.
+
+LEEME.txt
+    Documento principal. Que es el componente, que instalar, como esta hecho, y
+    las decisiones que ya estan tomadas con su motivo.
+
+ESTANDAR-CONTENIDO.txt
+    Para el EQUIPO DE CONTENIDO. El estandar completo: el arbol de carpetas,
+    los dos archivos de texto, como se nombran los archivos, como se escribe
+    una evaluacion, las seis reglas de los interactivos en HTML y las cuatro
+    que se pagan caro. Se puede entregar suelto.
+
+CONTRATO-LMS.txt
+    Para el OTRO equipo. Como encuentra el LMS a este componente, los cinco
+    puntos de enlace, la forma exacta de cada respuesta y las cinco reglas que
+    hay que respetar. Se puede entregar suelto: no obliga a leer este codigo.
+
+INVENTARIO.txt
+    Este archivo.
+
+.gitignore
+    Fuera del repositorio: compilacion, carpeta de trabajo, claves y bases de
+    datos.
+
+.gitattributes
+    Fin de linea por tipo de archivo. Los .cmd dejan de funcionar si les llega
+    un fin de linea de otro sistema, asi que se fija explicitamente.
+
+
+===============================================================
+contenido\   ·  DONDE TRABAJA EL EQUIPO DE CONTENIDO
+===============================================================
+
+La estructura de carpetas ES el formato. Nadie escribe JSON.
+
+    contenido\CO\secundaria\09\humanidades\
+        curso.txt                   la ficha del curso
+        indice.txt                  el indice curricular, con sangria
+        DBA-9-03 Romanticismo\      un tema, con su codigo delante
+            01-Guia de lectura.pdf
+            02-Linea de tiempo.png
+            03-Comparador\          carpeta con index.html
+            99-evaluacion.txt
+
+El pais, el nivel y el grado salen de la RUTA. La extension decide el tipo. El
+numero manda el orden. El resto del nombre es el titulo.
+
+PLANTILLA\
+    Se copia para empezar un curso. Trae curso.txt e indice.txt con las
+    instrucciones dentro, una evaluacion de ejemplo y un interactivo que ya
+    cumple las seis reglas.
+
+CO\secundaria\09\humanidades\
+    El curso de literatura, hecho con este estandar. Es la prueba de que
+    funciona: de estas carpetas sale un paquete cifrado y firmado.
+
+
+===============================================================
+esquema\   ·  lo que el componente escribe en disco
+===============================================================
+
+contenido.sql
+    Ocho tablas y tres vistas. Es TODO lo que este componente guarda, y no
+    depende de ninguna otra base de datos.
+
+    m04_paquete_instalado    que paquetes hay en este equipo
+    m04_indice_elemento      proyeccion del catalogo
+    m04_indice_taxonomia     proyeccion de la estructura curricular
+    m04_indice_estado        antiguedad de la proyeccion
+    m04_politica             lo que el administrador desactivo
+    m04_referencia_usada     que se uso, aunque el paquete ya no este
+    m08_repaso_sesion        sesion de consulta libre
+    m08_repaso_consumo       que material se abrio y cuanto tiempo
+
+    La aplicacion lo aplica sola la primera vez. No hay que ejecutarlo a mano.
+
+LEEME.txt
+    Por que no hay aqui personas, grupos ni calificaciones, y por que la unica
+    columna que roza al LMS admite nulo.
+
+
+===============================================================
+app-biblioteca\   ·  lo que se compila
+===============================================================
+
+AvacomBiblioteca.sln
+    Los cuatro proyectos.
+
+global.json
+    Fija la version del SDK de .NET. Evita que la compilacion cambie de
+    comportamiento segun lo que tenga instalado cada maquina.
+
+LEEME.txt
+    Mapa del codigo, archivo por archivo, con lo que hay que leer antes de
+    tocar cada zona.
+
+.gitignore
+    Igual que el de la raiz, para quien abra solo esta carpeta.
+
+
+---------------------------------------------------------------
+src\Avacom.Contenido\   ·  EL MOTOR
+---------------------------------------------------------------
+
+Sin interfaz y sin dependencia de la plataforma. Es donde esta todo lo que
+importa; lo demas lo usa.
+
+  Cripto\
+    CifradoArchivo.cs
+        Cifrado por bloques de 1 MB con AES-256-GCM. El formato del archivo
+        esta descrito en el comentario de cabecera. Se cifra por bloques y no
+        de una pieza para poder adelantar un video sin descifrar lo anterior.
+
+    Licencia.cs
+        Verifica la firma de la licencia y desenvuelve la clave del paquete con
+        la clave privada de este equipo. Es lo que hace que copiar un paquete a
+        otra maquina no sirva de nada.
+
+    Canonico.cs
+        Serializacion canonica de JSON: claves ordenadas por orden de bytes,
+        sin espacios. Tiene que coincidir BYTE A BYTE con la del empaquetador o
+        ninguna firma valida. Es el punto mas fragil del proyecto y el primero
+        que rompen las pruebas cuando algo se desalinea.
+
+    Blake2b.cs          La huella de contenido, 256 bits.
+    Identificador.cs    Identificadores unicos sin coordinacion central.
+
+  Paquetes\
+    LectorDePaquete.cs
+        Las seis comprobaciones del contrato, en orden, TODAS antes de
+        descifrar un solo byte. Despues abre el manifiesto con la clave que
+        saca de la licencia.
+
+    BaseEnMemoria.cs
+        Abre el manifiesto descifrado sin dejarlo en disco. Leer el comentario
+        entero antes de tocar: hay un compromiso explicito, esta justificado, y
+        ahi esta escrito como cerrarlo del todo.
+
+    LecturaDeManifiesto.cs
+        La cara publica del manifiesto. Existe para que la clave de respuesta
+        no pueda salir: se compara, no se lee, y en tiempo constante.
+
+  Indice\
+    BaseDeIndice.cs
+        El indice. Metadatos y nada mas: titulo, tipo, nivel, materia, version,
+        huella. Ni un byte de contenido.
+
+    Instalador.cs
+        Lo unico que escribe el indice. Escrito para poder ejecutarse dos veces
+        sin duplicar, porque de eso depende que el indice se pueda borrar y
+        reconstruir.
+
+    Politica.cs
+        Lo que el administrador desactivo. Se aplica ENCIMA del indice sin
+        modificarlo, para que actualizar el contenido nunca pise una decision
+        de la escuela. Seis ambitos y solo esos seis.
+
+  Medios\
+    ResolutorDeMedios.cs
+        El unico punto por el que sale contenido descifrado, y por eso el unico
+        sitio donde se comprueba la politica. Ojo con Etiqueta: la regla de
+        como se deriva la clave de cada archivo vive ahi y en ningun otro lado.
+
+    StreamDeMedio.cs
+        Descifra al vuelo, bloque a bloque, leyendo del archivo y no de una
+        copia en memoria. Se queda con su propia copia de la clave; el
+        comentario explica por que no puede compartirla.
+
+    ServidorDeMedios.cs
+        El servidor local. Es lo unico del componente que abre un puerto, asi
+        que es lo que mas conviene revisar. Escucha solo en 127.0.0.1, con
+        puerto que elige el sistema y una ficha aleatoria de 128 bits por
+        material. Solo entiende GET y HEAD.
+
+  Api\
+    ApiLocal.cs
+        La puerta por la que el LMS pregunta. Solo lectura, salvo un comando
+        para mostrar algo en pantalla. Escucha en 127.0.0.1 con ficha
+        obligatoria. No puede instalar, desinstalar ni cambiar politicas.
+
+    PuntoDeEnlace.cs
+        Como encuentra el LMS el puerto del dia: una nota en datos de programa
+        con el puerto y la ficha, que se borra al cerrar.
+
+  Uso\
+    RegistroDeUso.cs
+        Lo que deja el modo repaso: que material se abrio y cuanto tiempo. Ni
+        intento ni calificacion.
+
+
+---------------------------------------------------------------
+src\Avacom.Contenido.Consola\   ·  LA COMPROBACION
+---------------------------------------------------------------
+
+Program.cs
+    Doce pasos que ejercitan el componente entero sin interfaz. Es la forma mas
+    rapida de ver si algo se rompio, y no necesita MAUI.
+
+        1-3    crea el indice, carga la licencia, instala los paquetes
+        4-6    el catalogo, una politica del administrador, y su retirada
+        7      abre un material descifrandolo al vuelo
+        8      el repaso no deja registro academico, y no hay donde dejarlo
+        9      borra el indice, lo reconstruye, y sale identico
+        10     el servidor sirve un trozo del medio del video, y coincide
+               byte a byte con el descifrado directo
+        11     el tipo que llega a la interfaz no tiene donde meter la respuesta
+        12     el mismo paquete con una clave de equipo ajena no abre
+
+
+---------------------------------------------------------------
+src\Avacom.Biblioteca.App\   ·  LA APLICACION
+---------------------------------------------------------------
+
+  MauiProgram.cs        Arranque y contenedor de servicios.
+  App.xaml / .cs        Colores, estilos, convertidores y la ventana.
+  AppShell.xaml / .cs   Las cuatro pestañas.
+
+  Paquetes\
+    EstadoDelNodo.cs
+        Lo que este equipo es (su clave, su licencia) y lo que puede abrir.
+        Aplica el esquema la primera vez e instala desde la carpeta pub.
+
+    GestorDePaquetes.cs
+        Mantiene abiertos los paquetes que hacen falta y ni uno mas. SQLite
+        admite diez bases adjuntas y un despliegue grande puede tener cuarenta
+        paquetes instalados, asi que se abren a demanda.
+
+  ViewModels\
+    CatalogoViewModel.cs        navegacion por el arbol curricular
+    VisorViewModel.cs           monta lo que haga falta segun el tipo de
+                                material; nunca escribe contenido en disco
+    AdministracionViewModel.cs  carpeta de trabajo, instalacion y politicas
+
+  Vistas\
+    CatalogoPage           el catalogo. Solo lista lo que hay instalado.
+    VisorPage              el visor. Cambia segun el tipo: imagen, video,
+                           audio, documento, interactivo, actividad, leccion.
+    AdministracionPage     los cuatro pasos del administrador.
+    ScormPage              declarada y sin implementar. Dice en pantalla por
+                           que, y el motivo no es tecnico.
+    PropioPage             declarada y sin editor. Explica por que esta
+                           separada del contenido oficial.
+    Convertidores.cs       tres convertidores de enlace.
+
+  Resources\Styles\
+    Colores.xaml           la marca y la superficie. Gris papel, no blanco: en
+                           86 pulgadas el blanco puro deslumbra en una clase de
+                           cincuenta minutos.
+    Estilos.xaml           tamaños y tarjetas. Aqui vive la regla de que nada
+                           baja de 20 puntos, porque el ultimo alumno esta a
+                           cuatro metros.
+
+  Resources\AppIcon, Splash
+    Icono y pantalla de arranque, dibujados como trazo y no como texto: un
+    icono con tipografia depende de que la fuente exista al construirlo.
+
+  Resources\Fonts, Images, Raw
+    Vacias a proposito, cada una con su LEEME explicando por que. El contenido
+    educativo NO vive aqui: vive cifrado en los paquetes.
+
+  Platforms\Windows\
+    App.xaml / .cs         punto de entrada.
+    app.manifest           reconocimiento de densidad de pantalla. Sin esto,
+                           Windows estira la ventana y el texto pierde nitidez
+                           justo donde mas importa.
+    Package.appxmanifest   hoy NO se usa: se compila sin empaquetar. Se
+                           conserva por si algun dia se empaqueta, y lo dice en
+                           su cabecera.
+
+
+---------------------------------------------------------------
+tests\   ·  LAS PRUEBAS
+---------------------------------------------------------------
+
+CompatibilidadCriptoTests.cs
+    Compara contra vectores fijos. Si estas fallan, el componente y el
+    empaquetador han dejado de hablar el mismo idioma y nada mas va a
+    funcionar.
+
+ApiLocalTests.cs
+    ESTAS PRUEBAS SON EL CONTRATO. Cada nombre de campo que comprueban es un
+    compromiso con el equipo de LMS. Si alguien cambia uno, estas fallan, y el
+    arreglo es subir la version del contrato, no tocar la prueba.
+
+ServidorDeMediosTests.cs
+    Rangos normales y de sufijo, fichas invalidas, retirada de fichas, rechazo
+    de escrituras, y la regla de la etiqueta de los medios. Varias de estas
+    existen por fallos que ya se cometieron una vez.
+
+vectores\cripto.json
+    Los vectores. Pesa 2,7 MB porque uno de ellos es un archivo de mas de un
+    megabyte, y esta a proposito: el limite entre bloques es exactamente donde
+    se rompe una implementacion de cifrado escrita dos veces en dos lenguajes.
+    Es el 99% del peso de esta entrega.
+
+
+===============================================================
+paquetes\   ·  HERRAMIENTAS DEL EQUIPO DE CONTENIDO
+===============================================================
+
+Esto NO forma parte de la aplicacion. Es lo que usa el equipo de contenido para
+armar y firmar los paquetes. En el aula no hay Python.
+
+avacom_recolector.py
+    LA PIEZA CLAVE DEL ESTANDAR. Recorre el arbol de carpetas y deduce la
+    especificacion: la taxonomia desde indice.txt, los tipos desde la
+    extension, el orden desde el numero, las evaluaciones desde su texto.
+
+        revisar    dice en castellano que falta. No cambia nada.
+        armar      genera la especificacion y copia los medios.
+
+    La revision detecta lo que de verdad rompe una clase: un interactivo que
+    pide algo por internet, una pregunta abierta sin rubrica, dos materiales
+    con el mismo titulo, una carpeta que no cuelga de ningun codigo.
+
+avacom_cripto.py
+    Firma Ed25519, cifrado AES-256-GCM por bloques, envoltura X25519 de claves.
+    Es la implementacion de referencia: el C# tiene que coincidir con esto.
+
+avacom_empaquetador.py
+    Construye un paquete en claro a partir de una especificacion, y lo
+    verifica. Aqui vive tambien el esquema del manifiesto, en la constante
+    ESQUEMA, y vive aqui a proposito: tenerlo en dos sitios garantiza que un
+    dia dejen de coincidir.
+
+avacom_publicar.py
+    Cifra, firma y emite licencias por equipo. Un paquete publicado es
+    ilegible sin la licencia del equipo al que se emitio.
+
+generar_medios.py
+    Material de muestra con la forma correcta: proporciones de la pantalla
+    interactiva, texto legible a cuatro metros, duraciones realistas.
+
+prueba_paquete_ajeno.py
+    Comprueba las dos cosas que sostienen la proteccion: que un paquete copiado
+    a otro equipo no abre, y que un solo bit cambiado se rechaza.
+
+COMO-CARGAR-CONTENIDO.txt
+    El lado TECNICO: recoger, construir, revisar en claro, publicar y emitir la
+    licencia. Y lo que hay que vigilar al hacerlo. El equipo de contenido no
+    necesita este archivo.
+
+specs\
+    spec_co_preescolar.json    Colombia, transicion, exploracion del medio.
+                               Bases Curriculares. Taxonomia de proposito,
+                               actividad rectora, experiencia y aprendizaje.
+                               Sin materias. Actividad de tres opciones sin
+                               texto escrito, con instruccion hablada.
+
+    spec_co_secundaria.json    Colombia, grado 8, matematicas. Ley 115 y
+                               Estandares Basicos. Taxonomia de area,
+                               pensamiento, estandar y tema. Ocho reactivos.
+
+    spec_co_secundaria_literatura.json
+                               Colombia, grado 9, Humanidades. Cadena
+                               area -> factor -> estandar -> tema, que NO es la
+                               de Matematicas. Se añadio despues de que todo lo
+                               demas estuviera hecho, para comprobar que meter
+                               un area nueva no obliga a tocar el componente.
+                               Obras en dominio publico.
+
+    Las tres taxonomias son incompatibles entre si, y eso es justo lo que
+    demuestran: la taxonomia pertenece al contenido y el componente acepta la
+    que le llegue.
+
+materiales\
+    Medios de muestra reales, no marcadores de posicion.
+
+    lamina-granja.png        1920x1080, figuras grandes, para preescolar
+    lamina-bosque.png        la pareja de la anterior, para comparar
+    sonidos-animales.mp4     video de 95 segundos
+    funcion-lineal.pdf       dos paginas con su grafica dibujada
+    pendiente.mp4            video de 30 segundos
+    explorador-rectas.zip    interactivo: mueve pendiente y corte y ve la recta
+    voz-1..4.wav             instruccion hablada de la actividad
+
+LEEME.txt
+    Como funciona la tuberia, la diferencia entre firma y cifrado, y por que se
+    cifra tambien el manifiesto.
+
+
+===============================================================
+trabajo\   ·  SE CREA AL PROBAR, NO VIENE EN LA ENTREGA
+===============================================================
+
+    pub\        los dos paquetes publicados y cifrados
+    lic\        la licencia de este equipo
+    nodo\       su par de claves
+    esquema\    copia de contenido.sql
+    indice.db   el indice, que crea la aplicacion
+
+Es material de prueba. No se sube al control de versiones ni se copia a un
+aula. Se puede borrar entera y volver a generarla en cualquier momento.

@@ -1,0 +1,29 @@
+titulo: Evaluacion · Literatura colombiana del siglo XIX
+
+P: Que rasgo NO corresponde al Romanticismo literario?
+R: la busqueda de la musicalidad por encima del argumento
+peso: 1
+retro: Esa busqueda es propia del Modernismo. El Romanticismo pone por delante el sentimiento.
+
+P: En que año se publico Maria, de Jorge Isaacs?
+R: 1867
+peso: 1
+dificultad: baja
+
+P: El paisaje en la novela romantica funciona sobre todo como:
+R: espejo del estado de animo de los personajes
+peso: 1
+
+P: Elige un fragmento del Nocturno y explica como su ritmo refuerza lo que dice.
+abierta
+peso: 3
+dificultad: alta
+
+P: Compara como tratan la naturaleza el Romanticismo y el Modernismo.
+abierta
+peso: 3
+
+RUBRICA
+Uso de terminos tecnicos | Emplea con precision al menos dos terminos y los aplica al texto | 2
+Evidencia textual | Sostiene lo que afirma citando o parafraseando | 2
+Claridad de la escritura | Se entiende a la primera lectura | 1

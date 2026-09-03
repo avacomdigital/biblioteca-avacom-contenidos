@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avacom.Biblioteca.App.ViewModels"
+             xmlns:idx="clr-namespace:Avacom.Contenido.Indice;assembly=Avacom.Contenido"
+             x:Class="Avacom.Biblioteca.App.Vistas.CatalogoPage"
+             x:Name="Pagina"
+             x:DataType="vm:CatalogoViewModel"
+             Title="Contenido AVACOM">
+
+  <!-- Se lee a cuatro metros. Nada por debajo de 20, areas tactiles generosas
+       y como maximo una cosa importante por vista. -->
+
+  <ScrollView>
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Padding="40" RowSpacing="28">
+
+      <!-- Cabecera y migas -->
+      <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="20">
+        <Button Grid.Column="0" Text="Volver" Command="{Binding VolverCommand}"
+                IsVisible="{Binding PuedeVolver}" />
+        <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+          <Label Text="{Binding RutaTexto}" Style="{StaticResource Subtitulo}" />
+          <Label Text="Contenido AVACOM" Style="{StaticResource Titulo}" />
+        </VerticalStackLayout>
+      </Grid>
+
+      <!-- Aviso, solo cuando falta algo. Nunca un cartel permanente. -->
+      <Border Grid.Row="1" Style="{StaticResource TarjetaHundida}"
+              IsVisible="{Binding HayLicencia, Converter={StaticResource Negar}}">
+        <VerticalStackLayout Spacing="8">
+          <Label Text="ESTE EQUIPO TODAVIA NO ESTA PREPARADO" Style="{StaticResource Etiqueta}" />
+          <Label Text="{Binding Aviso}" />
+          <Label Text="Ve a Administracion y elige la carpeta de trabajo."
+                 Style="{StaticResource Subtitulo}" />
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- Ramas del arbol curricular -->
+      <CollectionView Grid.Row="2" ItemsSource="{Binding Hijos}" HeightRequest="180">
+        <CollectionView.ItemsLayout>
+          <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="idx:NodoTaxonomia">
+            <Border Style="{StaticResource Tarjeta}" WidthRequest="320" HeightRequest="150">
+              <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                <Label Text="{Binding TipoNodo}" Style="{StaticResource Etiqueta}" />
+                <Label Text="{Binding Nombre}" FontSize="24" FontAttributes="Bold"
+                       LineBreakMode="TailTruncation" MaxLines="3" />
+              </VerticalStackLayout>
+              <Border.GestureRecognizers>
+                <!-- Manejador en vez de enlace. Un enlace desde dentro de una
+                     plantilla hacia el modelo de la pagina depende de como
+                     resuelva el compilador de enlaces la version de MAUI que
+                     toque; esto funciona igual en todas. -->
+                <TapGestureRecognizer Tapped="AlTocarRama" />
+              </Border.GestureRecognizers>
+            </Border>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+
+      <!-- Materiales de este punto del arbol -->
+      <CollectionView Grid.Row="3" ItemsSource="{Binding Elementos}">
+        <CollectionView.ItemsLayout>
+          <GridItemsLayout Orientation="Vertical" Span="3"
+                           HorizontalItemSpacing="24" VerticalItemSpacing="24" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.EmptyView>
+          <!-- Vacio con salida, nunca una ilustracion muda -->
+          <VerticalStackLayout Padding="60" Spacing="12">
+            <Label Text="Aqui todavia no hay material" FontSize="28" />
+            <Label Text="Instala un paquete de contenido desde Administracion."
+                   Style="{StaticResource Subtitulo}" />
+          </VerticalStackLayout>
+        </CollectionView.EmptyView>
+        <CollectionView.ItemTemplate>
+          <DataTemplate x:DataType="idx:ElementoIndexado">
+            <Border Style="{StaticResource Tarjeta}" MinimumHeightRequest="200">
+              <Grid RowDefinitions="Auto,*,Auto" RowSpacing="12">
+                <Label Grid.Row="0" Text="{Binding Tipo}" Style="{StaticResource Etiqueta}" />
+                <Label Grid.Row="1" Text="{Binding Titulo}" FontSize="26" FontAttributes="Bold"
+                       LineBreakMode="WordWrap" />
+                <Label Grid.Row="2" Text="{Binding Asignatura}" Style="{StaticResource Subtitulo}" />
+              </Grid>
+              <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="AlTocarMaterial" />
+              </Border.GestureRecognizers>
+            </Border>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </Grid>
+  </ScrollView>
+</ContentPage>

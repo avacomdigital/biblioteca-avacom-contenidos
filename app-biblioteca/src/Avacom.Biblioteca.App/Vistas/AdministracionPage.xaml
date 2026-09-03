@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avacom.Biblioteca.App.ViewModels"
+             x:Class="Avacom.Biblioteca.App.Vistas.AdministracionPage"
+             x:Name="Pagina"
+             x:DataType="vm:AdministracionViewModel"
+             Title="Administracion">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="40" Spacing="32">
+
+      <VerticalStackLayout Spacing="6">
+        <Label Text="ADMINISTRACION" Style="{StaticResource Etiqueta}" />
+        <Label Text="Contenido de este equipo" Style="{StaticResource Titulo}" />
+      </VerticalStackLayout>
+
+      <!-- 1 · identidad del equipo -->
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="18">
+          <Label Text="1 · CARPETA DE TRABAJO" Style="{StaticResource Etiqueta}" />
+          <Label Text="Es donde estan la licencia de este equipo, su clave privada y los paquetes publicados. En un aula esto lo deja puesto el instalador."
+                 Style="{StaticResource Subtitulo}" />
+          <Entry Text="{Binding Carpeta}" FontSize="20" Placeholder="Ruta de la carpeta de trabajo" />
+          <HorizontalStackLayout Spacing="16">
+            <Button Text="Elegir licencia.json" Command="{Binding ElegirCarpetaCommand}" />
+            <Button Text="Usar esta ruta" Command="{Binding UsarRutaCommand}" />
+          </HorizontalStackLayout>
+          <Border Style="{StaticResource TarjetaHundida}" Padding="20">
+            <Label Text="{Binding Estado}" FontSize="20" />
+          </Border>
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- 2 · instalar -->
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="18">
+          <Label Text="2 · INSTALAR PAQUETES" Style="{StaticResource Etiqueta}" />
+          <Label Text="Se revisa la carpeta pub y se instala todo lo que verifique. Un paquete con la firma rota se rechaza y los demas siguen adelante."
+                 Style="{StaticResource Subtitulo}" />
+          <Button Text="Revisar e instalar" Style="{StaticResource BotonPrincipal}"
+                  Command="{Binding InstalarCommand}" IsEnabled="{Binding Listo}"
+                  HorizontalOptions="Start" />
+          <Border Style="{StaticResource TarjetaHundida}" Padding="20"
+                  IsVisible="{Binding Registro, Converter={StaticResource HayTexto}}">
+            <Label Text="{Binding Registro}" FontSize="18" />
+          </Border>
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- 3 · lo instalado -->
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="18">
+          <Label Text="3 · CONTENIDO INSTALADO" Style="{StaticResource Etiqueta}" />
+          <CollectionView ItemsSource="{Binding Paquetes}" HeightRequest="280">
+            <CollectionView.ItemsLayout>
+              <LinearItemsLayout Orientation="Vertical" ItemSpacing="16" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.EmptyView>
+              <Label Text="Todavia no hay ningun paquete instalado." Style="{StaticResource Subtitulo}" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="vm:PaqueteEnLista">
+                <Border Style="{StaticResource TarjetaHundida}">
+                  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+                    <VerticalStackLayout Grid.Column="0" Spacing="6">
+                      <Label Text="{Binding Asignatura}" FontSize="24" FontAttributes="Bold" />
+                      <Label Text="{Binding Clave}" Style="{StaticResource Subtitulo}" />
+                      <Label Text="{Binding Resumen}" Style="{StaticResource Subtitulo}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Retirar" VerticalOptions="Center"
+                            Clicked="AlRetirar" />
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- 4 · politicas -->
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="18">
+          <Label Text="4 · LO QUE ESTA ESCUELA NO USA" Style="{StaticResource Etiqueta}" />
+          <Label Text="Lo desactivado desaparece del catalogo. No se muestra atenuado ni con candado: si no se puede usar, no se enseña."
+                 Style="{StaticResource Subtitulo}" />
+          <HorizontalStackLayout Spacing="16">
+            <Picker ItemsSource="{Binding Ambitos}" SelectedItem="{Binding AmbitoNuevo}"
+                    FontSize="20" WidthRequest="240" />
+            <Entry Text="{Binding ValorNuevo}" FontSize="20" WidthRequest="360"
+                   Placeholder="Valor exacto, por ejemplo Matematicas" />
+            <Button Text="Desactivar" Command="{Binding DesactivarCommand}" />
+          </HorizontalStackLayout>
+
+          <CollectionView ItemsSource="{Binding Politicas}" HeightRequest="180">
+            <CollectionView.ItemsLayout>
+              <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.EmptyView>
+              <Label Text="No hay nada desactivado. El catalogo se ve entero."
+                     Style="{StaticResource Subtitulo}" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="vm:PoliticaEnLista">
+                <Border Style="{StaticResource TarjetaHundida}" Padding="20">
+                  <Label FontSize="20">
+                    <Label.FormattedText>
+                      <FormattedString>
+                        <Span Text="{Binding Accion}" TextColor="{StaticResource RojoOscuro}" />
+                        <Span Text="   " />
+                        <Span Text="{Binding Ambito}" />
+                        <Span Text=" = " />
+                        <Span Text="{Binding Valor}" FontAttributes="Bold" />
+                      </FormattedString>
+                    </Label.FormattedText>
+                  </Label>
+                </Border>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+
+          <Button Text="Quitar todo" Command="{Binding QuitarPoliticasCommand}"
+                  HorizontalOptions="Start" />
+        </VerticalStackLayout>
+      </Border>
+
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

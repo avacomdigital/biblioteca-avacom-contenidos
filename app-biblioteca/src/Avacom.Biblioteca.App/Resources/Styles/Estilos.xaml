@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+  <!--
+    Tamaños de letra.
+
+    Nada por debajo de 20. La pantalla mide 86 pulgadas y el ultimo alumno esta
+    a cuatro metros: lo que en un portatil parece comodo, ahi no se lee. El
+    numero de partida es 20 para lo secundario y 26 para lo que hay que leer de
+    verdad. Se comprueba en la pantalla de 86 pulgadas, no en el monitor
+    del escritorio.
+  -->
+
+  <Style TargetType="Page" ApplyToDerivedTypes="True">
+    <Setter Property="BackgroundColor" Value="{StaticResource Papel}" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+
+  <Style TargetType="Label">
+    <Setter Property="TextColor" Value="{StaticResource Tinta}" />
+    <Setter Property="FontSize" Value="20" />
+  </Style>
+
+  <Style x:Key="Titulo" TargetType="Label">
+    <Setter Property="FontSize" Value="40" />
+    <Setter Property="FontAttributes" Value="Bold" />
+  </Style>
+
+  <Style x:Key="Subtitulo" TargetType="Label">
+    <Setter Property="FontSize" Value="22" />
+    <Setter Property="TextColor" Value="{StaticResource TintaSuave}" />
+  </Style>
+
+  <Style x:Key="Etiqueta" TargetType="Label">
+    <Setter Property="FontSize" Value="16" />
+    <Setter Property="TextColor" Value="{StaticResource RojoOscuro}" />
+    <Setter Property="CharacterSpacing" Value="1" />
+  </Style>
+
+  <!--
+    La tarjeta. Es la unidad de toda la interfaz.
+
+    MAUI admite una sola sombra por elemento, asi que el relieve de dos luces se
+    consigue con la sombra oscura abajo a la derecha y un trazo claro alrededor.
+    Da el mismo efecto y cuesta la mitad de dibujar, que en una pantalla tactil
+    grande importa.
+  -->
+  <Style x:Key="Tarjeta" TargetType="Border">
+    <Setter Property="BackgroundColor" Value="{StaticResource Papel}" />
+    <Setter Property="Stroke" Value="{StaticResource SombraClara}" />
+    <Setter Property="StrokeThickness" Value="2" />
+    <Setter Property="Padding" Value="28" />
+    <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+    <Setter Property="Shadow">
+      <Setter.Value>
+        <Shadow Brush="{StaticResource SombraOscura}" Offset="8,8" Radius="18" Opacity="0.9" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Hundida: se usa para lo que esta seleccionado o para huecos de contenido. -->
+  <Style x:Key="TarjetaHundida" TargetType="Border">
+    <Setter Property="BackgroundColor" Value="{StaticResource PapelHundido}" />
+    <Setter Property="Stroke" Value="{StaticResource Borde}" />
+    <Setter Property="StrokeThickness" Value="1" />
+    <Setter Property="Padding" Value="24" />
+    <Setter Property="StrokeShape" Value="RoundRectangle 24" />
+  </Style>
+
+  <!--
+    Los botones son grandes a proposito. Un dedo sobre cristal necesita unos
+    once milimetros; en esta pantalla eso son mas de sesenta pixeles de alto, y
+    aun asi conviene pasarse. Un boton pequeño en un aula significa que el
+    profesor lo intenta tres veces delante de treinta alumnos.
+  -->
+  <Style TargetType="Button">
+    <Setter Property="BackgroundColor" Value="{StaticResource Papel}" />
+    <Setter Property="TextColor" Value="{StaticResource Tinta}" />
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="MinimumHeightRequest" Value="64" />
+    <Setter Property="Padding" Value="28,0" />
+    <Setter Property="BorderColor" Value="{StaticResource Borde}" />
+    <Setter Property="BorderWidth" Value="1" />
+    <Setter Property="Shadow">
+      <Setter.Value>
+        <Shadow Brush="{StaticResource SombraOscura}" Offset="6,6" Radius="12" Opacity="0.8" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="BotonPrincipal" TargetType="Button">
+    <Setter Property="BackgroundColor" Value="{StaticResource Rojo}" />
+    <Setter Property="TextColor" Value="#FFFFFF" />
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontAttributes" Value="Bold" />
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="MinimumHeightRequest" Value="64" />
+    <Setter Property="Padding" Value="32,0" />
+    <Setter Property="BorderWidth" Value="0" />
+    <Setter Property="Shadow">
+      <Setter.Value>
+        <Shadow Brush="{StaticResource SombraOscura}" Offset="6,6" Radius="12" Opacity="0.8" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="Shell" ApplyToDerivedTypes="True">
+    <Setter Property="Shell.BackgroundColor" Value="{StaticResource Papel}" />
+    <Setter Property="Shell.ForegroundColor" Value="{StaticResource Tinta}" />
+    <Setter Property="Shell.TitleColor" Value="{StaticResource Tinta}" />
+    <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource Papel}" />
+    <Setter Property="Shell.TabBarTitleColor" Value="{StaticResource RojoOscuro}" />
+    <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource TintaSuave}" />
+  </Style>
+
+  <Style TargetType="ActivityIndicator">
+    <Setter Property="Color" Value="{StaticResource Rojo}" />
+  </Style>
+
+</ResourceDictionary>

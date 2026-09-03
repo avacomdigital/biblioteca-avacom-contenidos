@@ -1,0 +1,2 @@
+﻿Imagenes de la interfaz. Las de contenido educativo no van aqui: esas viven
+cifradas dentro de los paquetes.

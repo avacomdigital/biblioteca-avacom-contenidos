@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avacom.Biblioteca.App.Vistas.ScormPage"
+             Title="Cursos SCORM">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="40" Spacing="32">
+
+      <VerticalStackLayout Spacing="6">
+        <Label Text="CURSOS SCORM" Style="{StaticResource Etiqueta}" />
+        <Label Text="Cursos hechos fuera" Style="{StaticResource Titulo}" />
+      </VerticalStackLayout>
+
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="20">
+          <Label Text="Este apartado esta declarado y todavia sin implementar."
+                 FontSize="26" FontAttributes="Bold" />
+          <Label Style="{StaticResource Subtitulo}"
+                 Text="Un curso SCORM es una carpeta con un imsmanifest.xml y paginas web dentro. Se abre en el mismo componente de navegacion que ya usa el visor, asi que la parte de mostrarlo esta resuelta." />
+          <Label Style="{StaticResource Subtitulo}"
+                 Text="Lo que falta decidir no es tecnico. SCORM registra tiempo y calificacion por su cuenta, y en AVACOM eso pertenece al LMS. Hasta que ese punto no este cerrado, un curso SCORM instalado aqui podria generar un segundo expediente academico paralelo al del nodo, y eso es peor que no tenerlo." />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Style="{StaticResource TarjetaHundida}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="LO QUE HACE FALTA ANTES" Style="{StaticResource Etiqueta}" />
+          <Label Text="· Que quede escrito quien es el dueño del tiempo y de la nota cuando el curso lo trae de fabrica." />
+          <Label Text="· Que se decida si un curso ajeno puede o no dar calificacion." />
+          <Label Text="· Que el curso quede firmado igual que el contenido propio, para que no entre nada sin revisar." />
+        </VerticalStackLayout>
+      </Border>
+
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

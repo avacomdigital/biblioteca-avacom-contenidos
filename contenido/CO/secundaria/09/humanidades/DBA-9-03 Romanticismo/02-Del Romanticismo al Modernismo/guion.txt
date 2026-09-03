@@ -1,0 +1,60 @@
+titulo: Del Romanticismo al Modernismo
+objetivo: Reconoce rasgos de los dos movimientos en obras del siglo XIX
+duracion: 50
+
+## Por donde empezamos
+
+El Romanticismo llega a America Latina cuando las republicas nuevas buscan
+contarse a si mismas. No es solo una moda literaria: es una forma de mirar el
+propio pais, y por eso las novelas de esa epoca se detienen tanto en el paisaje.
+
+IMAGEN: linea-tiempo.png | Los dos movimientos y sus fechas
+
+> Si reconoces la perdida que hay en el centro, entiendes por que el narrador
+> cuenta en pasado.
+
+## Tres rasgos que se reconocen al leer
+
+- El sentimiento manda sobre el argumento. Importa menos que pasa que como lo
+  vive quien lo cuenta.
+- El paisaje no decora: acompaña. Llueve cuando el personaje sufre.
+- Hay una perdida en el centro. Casi siempre alguien recuerda algo que ya no
+  puede volver.
+
+VIDEO: valle.mp4 | El valle del Cauca, donde transcurre Maria
+
+QUIZ
+P: El paisaje en la novela romantica funciona sobre todo como:
+- decoracion para ambientar la epoca
+- espejo del estado de animo de los personajes *
+- una forma de alargar el relato
+retro: Llueve cuando el personaje sufre. El paisaje acompaña, no adorna.
+
+## El Modernismo cambia de oido
+
+Hacia el final del siglo aparece una generacion que ya no quiere contar
+sentimientos: quiere construir un objeto sonoro. El poema empieza a escribirse
+casi como una partitura, y el ritmo pasa a ser tema.
+
+AUDIO: nocturno.wav | Nocturno, de Jose Asuncion Silva, leido en voz alta
+
+Escuchalo antes de analizarlo. El vaiven del ritmo se percibe mucho antes de
+poder explicarlo, y esa es la puerta de entrada.
+
+QUIZ
+P: Que recurso predomina en la poesia modernista?
+- la rima consonante estricta
+- la aliteracion y la repeticion ritmica *
+- el verso libre sin ninguna medida
+retro: El Modernismo trabaja el poema casi como una partitura.
+
+## Para seguir por tu cuenta
+
+PDF: guia-lectura.pdf | Guia de lectura completa, con ejercicios
+
+QUIZ
+P: En que año se publico Maria, de Jorge Isaacs?
+- 1837
+- 1867 *
+- 1894
+retro: 1867, en plena consolidacion del Romanticismo en America Latina.

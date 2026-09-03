@@ -1,0 +1,58 @@
+# BANCO DE PREGUNTAS
+#
+# No se da en clase. Es el repertorio del que el examen saca reactivos, y por
+# eso dos alumnos no ven el mismo examen.
+
+titulo: Banco · Literatura colombiana del siglo XIX
+extraer: 4
+por_dificultad: baja 1, media 2, alta 1
+
+P: En que año se publico Maria, de Jorge Isaacs?
+R: 1867
+dificultad: baja
+peso: 1
+
+P: A que movimiento pertenece Jose Asuncion Silva?
+R: modernismo
+dificultad: baja
+peso: 1
+
+P: En que año nacio Jorge Isaacs?
+R: 1837
+dificultad: baja
+peso: 1
+
+P: Que funcion cumple el paisaje en la novela romantica?
+R: espejo del estado de animo de los personajes
+dificultad: media
+peso: 2
+
+P: Que recurso sonoro predomina en la poesia modernista?
+R: la aliteracion y la repeticion ritmica
+dificultad: media
+peso: 2
+
+P: Por que el narrador romantico cuenta casi siempre en pasado?
+R: porque hay una perdida en el centro del relato
+dificultad: media
+peso: 2
+
+P: Que diferencia hay entre describir y sugerir una imagen?
+R: describir nombra la cosa y sugerir nombra su efecto
+dificultad: media
+peso: 2
+
+P: Analiza como el ritmo del Nocturno refuerza su sentido. Usa dos terminos tecnicos.
+abierta
+dificultad: alta
+peso: 4
+
+P: Compara el papel de la naturaleza en los dos movimientos, con un ejemplo de cada uno.
+abierta
+dificultad: alta
+peso: 4
+
+RUBRICA
+Uso de terminos tecnicos | Emplea con precision al menos dos terminos y los aplica al texto | 2
+Evidencia textual | Sostiene lo que afirma citando o parafraseando | 2
+Claridad de la escritura | Se entiende a la primera lectura | 1

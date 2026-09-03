@@ -1,0 +1,84 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Un solo destino: el equipo maestro que va dentro de la pantalla
+         interactiva de 86 pulgadas, que es un Windows. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+
+    <OutputType>Exe</OutputType>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationTitle>AVACOM Biblioteca</ApplicationTitle>
+    <ApplicationId>world.avacom.biblioteca</ApplicationId>
+    <ApplicationDisplayVersion>0.1</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <RootNamespace>Avacom.Biblioteca.App</RootNamespace>
+
+    <!-- Version minima de Windows. Por debajo de esta, el componente de
+         navegacion incrustado no es fiable, y de el dependen el visor de
+         documentos y el de material interactivo. -->
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+
+    <!--
+      Se compila SIN empaquetar, y es una decision, no un descuido.
+
+      Una aplicacion empaquetada corre dentro del aislamiento de red de Windows,
+      que bloquea las conexiones al propio equipo salvo que se añada una
+      exencion con CheckNetIsolation en cada maquina. El servidor de medios de
+      este componente escucha justo ahi, en 127.0.0.1, asi que empaquetada no
+      reproduciria ni un video sin un paso manual por aula.
+
+      Sin empaquetar tambien encaja con como se despliega: un instalador que
+      deja la aplicacion en el equipo maestro, no una tienda.
+    -->
+    <WindowsPackageType>None</WindowsPackageType>
+
+    <!--
+      Una aplicacion sin empaquetar necesita el tiempo de ejecucion del SDK de
+      aplicaciones de Windows instalado en la maquina, y "dotnet workload
+      install maui" NO lo instala: solo lo trae Visual Studio. Sin esto, el
+      proyecto compila sin un solo aviso y al arrancar sale un cuadro de dialogo
+      pidiendo un componente que nadie menciono.
+
+      Autocontenido lo mete dentro de la propia aplicacion. Pesa mas, y a cambio
+      el instalador del aula no depende de nada previo. Para un equipo maestro
+      que se prepara una vez y se olvida, es el cambio correcto.
+    -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+
+    <!-- La solucion mapea x64 para este proyecto. Sin declararlo aqui, el
+         gestor de configuraciones de Visual Studio queda incoherente. -->
+    <Platforms>x64</Platforms>
+
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Release'">true</PublishReadyToRun>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources/AppIcon/appicon.svg" Color="#E9EDF3" />
+    <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#E9EDF3" BaseSize="256,256" />
+    <!-- Con comodin abierto, el generador de recursos intentaria tratar los
+         LEEME.txt como imagen y como fuente, y la compilacion se cae. -->
+    <MauiImage Include="Resources/Images/*.svg;Resources/Images/*.png" />
+    <MauiFont Include="Resources/Fonts/*.ttf" />
+    <MauiAsset Include="Resources/Raw/**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Avacom.Contenido/Avacom.Contenido.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- AddDebug() vive en su propio paquete y no llega de forma transitiva:
+         sin el, la compilacion en Debug falla con CS1061. -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.*" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+    <!-- Con Version="*" NuGet avisa (NU1604) y la restauracion deja de ser
+         reproducible. Si esta version no existe para la rama de MAUI que se
+         instale, subirla. -->
+    <PackageReference Include="CommunityToolkit.Maui.MediaElement" Version="10.*" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.*" />
+  </ItemGroup>
+</Project>

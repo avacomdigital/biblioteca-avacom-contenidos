@@ -1,0 +1,227 @@
+{
+  "paquete": {
+    "clave_paquete": "co-secundaria-8-matematicas",
+    "version": "1",
+    "pais": "CO",
+    "nivel_clave": "secundaria",
+    "grado": "8",
+    "asignatura": "Matemáticas",
+    "idioma": "es",
+    "titulo": "Matemáticas · Grado 8",
+    "descripcion": "Área obligatoria de la Ley 115 artículo 23. Estándares Básicos de Competencias, pensamiento variacional.",
+    "emisor": "AVACOM"
+  },
+  "medios_origen": "../materiales",
+  "taxonomia": [
+    {
+      "taxonomia_ref": "co-sec-area-mat",
+      "padre_ref": null,
+      "tipo_nodo": "area",
+      "nombre": "Matemáticas",
+      "orden": 8,
+      "codigo": "L115-A8",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-var",
+      "padre_ref": "co-sec-area-mat",
+      "tipo_nodo": "pensamiento",
+      "nombre": "Pensamiento variacional y sistemas algebraicos y analíticos",
+      "orden": 5,
+      "codigo": "EBC-VAR",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-var-e1",
+      "padre_ref": "co-sec-mat-var",
+      "tipo_nodo": "estandar",
+      "nombre": "Identifico relaciones entre propiedades de las gráficas y propiedades de las ecuaciones algebraicas",
+      "orden": 1,
+      "codigo": "EBC-8-VAR-01",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-var-e1-dba1",
+      "padre_ref": "co-sec-mat-var-e1",
+      "tipo_nodo": "tema",
+      "nombre": "Función lineal y su representación gráfica",
+      "orden": 1,
+      "codigo": "DBA-8-05",
+      "objetivo": "Identifica y analiza la función lineal en distintas representaciones"
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-var-e1-dba2",
+      "padre_ref": "co-sec-mat-var-e1",
+      "tipo_nodo": "tema",
+      "nombre": "Pendiente y razón de cambio",
+      "orden": 2,
+      "codigo": "DBA-8-06",
+      "objetivo": "Interpreta la pendiente como razón de cambio constante"
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-num",
+      "padre_ref": "co-sec-area-mat",
+      "tipo_nodo": "pensamiento",
+      "nombre": "Pensamiento numérico y sistemas numéricos",
+      "orden": 1,
+      "codigo": "EBC-NUM",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-sec-mat-num-e1",
+      "padre_ref": "co-sec-mat-num",
+      "tipo_nodo": "estandar",
+      "nombre": "Utilizo números reales en sus diferentes representaciones",
+      "orden": 1,
+      "codigo": "EBC-8-NUM-01",
+      "objetivo": null
+    }
+  ],
+  "elementos": [
+    {
+      "elemento_ref": "co-sec-mat-doc-funcion",
+      "tipo": "documento",
+      "titulo": "La función lineal",
+      "taxonomia_ref": "co-sec-mat-var-e1-dba1",
+      "paginas": 6,
+      "descripcion": "Material de lectura con ejemplos resueltos",
+      "archivo": "funcion-lineal.pdf"
+    },
+    {
+      "elemento_ref": "co-sec-mat-video-pendiente",
+      "tipo": "video",
+      "titulo": "Qué significa la pendiente",
+      "taxonomia_ref": "co-sec-mat-var-e1-dba2",
+      "duracion_seg": 420,
+      "accesibilidad": {
+        "subtitulos": true,
+        "transcripcion": true
+      },
+      "archivo": "pendiente.mp4"
+    },
+    {
+      "elemento_ref": "co-sec-mat-int-grafica",
+      "tipo": "interactivo",
+      "titulo": "Explorador de rectas",
+      "taxonomia_ref": "co-sec-mat-var-e1-dba1",
+      "descripcion": "El alumno mueve la pendiente y el corte y ve la recta cambiar",
+      "archivo": "explorador-rectas.zip"
+    },
+    {
+      "elemento_ref": "co-sec-mat-eval-funcion",
+      "tipo": "evaluacion",
+      "titulo": "Evaluación · Función lineal",
+      "taxonomia_ref": "co-sec-mat-var-e1",
+      "descripcion": "Ocho reactivos. Seis autocalificables y dos de respuesta abierta",
+      "preguntas": [
+        {
+          "pregunta_ref": "co-sec-q-01",
+          "tipo": "opcion_multiple",
+          "enunciado": "¿Cuál es la pendiente de la recta y = 3x - 5?",
+          "clave_respuesta": "3",
+          "peso": 1,
+          "dificultad": "baja"
+        },
+        {
+          "pregunta_ref": "co-sec-q-02",
+          "tipo": "opcion_multiple",
+          "enunciado": "Si la pendiente es negativa, la recta:",
+          "clave_respuesta": "desciende de izquierda a derecha",
+          "peso": 1,
+          "dificultad": "baja"
+        },
+        {
+          "pregunta_ref": "co-sec-q-03",
+          "tipo": "numerica",
+          "enunciado": "Halla el corte con el eje y de y = -2x + 7",
+          "clave_respuesta": "7",
+          "peso": 1,
+          "dificultad": "media"
+        },
+        {
+          "pregunta_ref": "co-sec-q-04",
+          "tipo": "numerica",
+          "enunciado": "Una recta pasa por (0,2) y (4,10). ¿Cuál es su pendiente?",
+          "clave_respuesta": "2",
+          "peso": 1.5,
+          "dificultad": "media"
+        },
+        {
+          "pregunta_ref": "co-sec-q-05",
+          "tipo": "emparejamiento",
+          "enunciado": "Empareja cada ecuación con su gráfica",
+          "clave_respuesta": "A-2,B-1,C-3",
+          "peso": 1.5,
+          "dificultad": "media"
+        },
+        {
+          "pregunta_ref": "co-sec-q-06",
+          "tipo": "verdadero_falso",
+          "enunciado": "Toda función lineal pasa por el origen",
+          "clave_respuesta": "falso",
+          "peso": 1,
+          "dificultad": "media",
+          "retroalimentacion": "Solo pasa por el origen cuando el corte con el eje y es cero"
+        },
+        {
+          "pregunta_ref": "co-sec-q-07",
+          "tipo": "respuesta_abierta",
+          "enunciado": "Explica con tus palabras qué representa la pendiente en una situación de la vida diaria",
+          "peso": 2,
+          "dificultad": "alta"
+        },
+        {
+          "pregunta_ref": "co-sec-q-08",
+          "tipo": "respuesta_abierta",
+          "enunciado": "Un taxi cobra 4000 de banderazo y 1500 por kilómetro. Escribe la función y explica qué es cada número",
+          "peso": 2,
+          "dificultad": "alta"
+        }
+      ],
+      "rubrica": [
+        {
+          "rubrica_ref": "co-sec-r-01",
+          "criterio": "Interpretación",
+          "descriptor": "Relaciona la pendiente con una razón de cambio real",
+          "peso": 2
+        },
+        {
+          "rubrica_ref": "co-sec-r-02",
+          "criterio": "Representación",
+          "descriptor": "Escribe correctamente la función pedida",
+          "peso": 2
+        },
+        {
+          "rubrica_ref": "co-sec-r-03",
+          "criterio": "Argumentación",
+          "descriptor": "Justifica con lenguaje matemático apropiado",
+          "peso": 1
+        }
+      ]
+    },
+    {
+      "elemento_ref": "co-sec-mat-lec-funcion",
+      "tipo": "leccion",
+      "titulo": "Función lineal y razón de cambio",
+      "taxonomia_ref": "co-sec-mat-var-e1",
+      "secuencia": [
+        {
+          "item_ref": "co-sec-mat-doc-funcion",
+          "nota": "Lectura previa"
+        },
+        {
+          "item_ref": "co-sec-mat-video-pendiente",
+          "nota": "Explicación"
+        },
+        {
+          "item_ref": "co-sec-mat-int-grafica",
+          "nota": "Exploración guiada"
+        },
+        {
+          "item_ref": "co-sec-mat-eval-funcion",
+          "nota": "Evaluación de cierre"
+        }
+      ]
+    }
+  ]
+}

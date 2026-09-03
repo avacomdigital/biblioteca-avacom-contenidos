@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Sin MAUI y sin interfaz. Sirve para ver el
+         componente funcionando de punta a punta antes de tocar nada de UI. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Avacom.Contenido.Consola</RootNamespace>
+    <AssemblyName>avacom</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Avacom.Contenido/Avacom.Contenido.csproj" />
+  </ItemGroup>
+</Project>

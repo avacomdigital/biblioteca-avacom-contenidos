@@ -1,0 +1,35 @@
+﻿# ------------------------------------------------------------------
+# EVALUACION
+#
+# Se escribe como la escribiria un profesor. Cada pregunta empieza
+# por "P:". Debajo va su respuesta con "R:", o la palabra "abierta"
+# si la tiene que calificar una persona.
+# ------------------------------------------------------------------
+
+titulo: Evaluacion de la unidad
+
+P: Enunciado de una pregunta con respuesta exacta
+R: la respuesta correcta, tal como se espera escrita
+peso: 1
+dificultad: baja
+retro: Lo que se le explica al alumno cuando acierta.
+
+P: Otra pregunta
+R: su respuesta
+peso: 1
+
+P: Una pregunta que tiene que calificar el profesor
+abierta
+peso: 3
+dificultad: alta
+
+# Si hay preguntas abiertas, la RUBRICA es obligatoria. Sin ella dos
+# profesores dan notas distintas al mismo texto y la familia reclama
+# con razon.
+#
+#   criterio | que se espera exactamente | peso
+
+RUBRICA
+Uso de terminos tecnicos | Emplea con precision al menos dos terminos y los aplica al texto, no solo los nombra | 2
+Evidencia textual | Sostiene lo que afirma citando o parafraseando el material | 2
+Claridad de la escritura | Se entiende a la primera lectura y las ideas van en orden | 1

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Avacom.Biblioteca.App.ViewModels"
+             xmlns:pq="clr-namespace:Avacom.Contenido.Paquetes;assembly=Avacom.Contenido"
+             xmlns:tk="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui.MediaElement"
+             x:Class="Avacom.Biblioteca.App.Vistas.VisorPage"
+             x:DataType="vm:VisorViewModel"
+             Shell.NavBarIsVisible="False">
+
+  <Grid RowDefinitions="Auto,*" Padding="40" RowSpacing="24">
+
+    <!-- Cabecera. Cerrar siempre en el mismo sitio: en una pantalla de 86
+         pulgadas, buscar el boton de salir delante de la clase es lo peor. -->
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="24">
+      <VerticalStackLayout Grid.Column="0" Spacing="6">
+        <Label Text="{Binding Tipo}" Style="{StaticResource Etiqueta}" />
+        <Label Text="{Binding Titulo}" Style="{StaticResource Titulo}" />
+        <Label Text="{Binding Detalle}" Style="{StaticResource Subtitulo}"
+               IsVisible="{Binding Detalle, Converter={StaticResource HayTexto}}" />
+      </VerticalStackLayout>
+      <Button Grid.Column="1" Text="Cerrar" Clicked="AlCerrar" VerticalOptions="Start" />
+    </Grid>
+
+    <!-- Cuerpo -->
+    <Grid Grid.Row="1">
+
+      <ActivityIndicator IsRunning="{Binding Cargando}" IsVisible="{Binding Cargando}"
+                         HeightRequest="60" WidthRequest="60"
+                         HorizontalOptions="Center" VerticalOptions="Center" />
+
+      <Border Style="{StaticResource TarjetaHundida}" IsVisible="{Binding HayProblema}"
+              VerticalOptions="Center" HorizontalOptions="Center" Padding="48">
+        <VerticalStackLayout Spacing="12">
+          <Label Text="NO SE PUDO ABRIR" Style="{StaticResource Etiqueta}" />
+          <Label Text="{Binding Problema}" FontSize="24" />
+        </VerticalStackLayout>
+      </Border>
+
+      <!-- Imagen -->
+      <Border Style="{StaticResource Tarjeta}" IsVisible="{Binding EsImagen}" Padding="16">
+        <Image Source="{Binding Imagen}" Aspect="AspectFit" />
+      </Border>
+
+      <!-- Video o audio. La direccion apunta al servidor local: el archivo en
+           claro no existe en ningun sitio del disco. -->
+      <Border Style="{StaticResource Tarjeta}" IsVisible="{Binding EsMedio}" Padding="16">
+        <tk:MediaElement x:Name="Reproductor"
+                         ShouldAutoPlay="False" ShouldShowPlaybackControls="True" />
+      </Border>
+
+      <!-- Documento o interactivo -->
+      <Border Style="{StaticResource Tarjeta}" IsVisible="{Binding EsWeb}" Padding="8">
+        <WebView x:Name="Navegador" />
+      </Border>
+
+      <!-- Actividad -->
+      <ScrollView IsVisible="{Binding EsActividad}">
+        <VerticalStackLayout Spacing="24">
+          <CollectionView ItemsSource="{Binding Reactivos}">
+            <CollectionView.ItemsLayout>
+              <LinearItemsLayout Orientation="Vertical" ItemSpacing="24" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+              <DataTemplate x:DataType="vm:ReactivoViewModel">
+                <Border Style="{StaticResource Tarjeta}">
+                  <VerticalStackLayout Spacing="16">
+                    <Label Text="{Binding Numero}" Style="{StaticResource Etiqueta}" />
+                    <Label Text="{Binding Enunciado}" FontSize="30" FontAttributes="Bold"
+                           LineBreakMode="WordWrap" />
+
+                    <HorizontalStackLayout Spacing="16">
+                      <Button Text="Escuchar" Command="{Binding EscucharCommand}"
+                              IsVisible="{Binding TieneVoz}" />
+                      <Entry Placeholder="Escribe la respuesta" FontSize="24"
+                             WidthRequest="380" Text="{Binding Respuesta}" />
+                      <Button Text="Comprobar" Style="{StaticResource BotonPrincipal}"
+                              Command="{Binding ComprobarCommand}" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding Resultado}" FontSize="22"
+                           IsVisible="{Binding Contestado}" />
+                  </VerticalStackLayout>
+                </Border>
+              </DataTemplate>
+            </CollectionView.ItemTemplate>
+          </CollectionView>
+        </VerticalStackLayout>
+      </ScrollView>
+
+      <!-- Leccion: la secuencia que preparo el equipo de contenido -->
+      <ScrollView IsVisible="{Binding EsLeccion}">
+        <CollectionView ItemsSource="{Binding Pasos}">
+          <CollectionView.ItemsLayout>
+            <LinearItemsLayout Orientation="Vertical" ItemSpacing="20" />
+          </CollectionView.ItemsLayout>
+          <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="pq:PasoDeLeccion">
+              <Border Style="{StaticResource Tarjeta}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="28">
+                  <Label Grid.Column="0" Text="{Binding Orden}" FontSize="44"
+                         TextColor="{StaticResource SombraOscura}" VerticalOptions="Center" />
+                  <VerticalStackLayout Grid.Column="1" Spacing="8">
+                    <Label Text="{Binding Tipo}" Style="{StaticResource Etiqueta}" />
+                    <Label Text="{Binding Titulo}" FontSize="26" FontAttributes="Bold" />
+                    <Label Text="{Binding Nota}" Style="{StaticResource Subtitulo}" />
+                  </VerticalStackLayout>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </CollectionView.ItemTemplate>
+        </CollectionView>
+      </ScrollView>
+
+      <!-- Reproductor oculto para la instruccion hablada de las preguntas -->
+      <tk:MediaElement x:Name="Voz" ShouldAutoPlay="True" ShouldShowPlaybackControls="False"
+                       HeightRequest="1" WidthRequest="1" Opacity="0" InputTransparent="True" />
+    </Grid>
+  </Grid>
+</ContentPage>

@@ -1,0 +1,5 @@
+﻿# Opcional. Solo si quieres ponerle nombre y nota a la secuencia.
+# Si no existe, la leccion toma el nombre de la carpeta.
+
+titulo: Como se llama esta sesion
+descripcion: Una sesion de cincuenta minutos.

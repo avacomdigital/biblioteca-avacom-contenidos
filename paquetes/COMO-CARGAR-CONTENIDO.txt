@@ -1,0 +1,99 @@
+﻿Del contenido al aula · el lado técnico
+======================================
+
+Este archivo es para quien publica y firma. El equipo de contenido no necesita
+leerlo: lo suyo está en ESTANDAR-CONTENIDO.txt, en la raíz.
+
+
+Dónde empieza y dónde acaba cada uno
+------------------------------------
+
+    EQUIPO DE CONTENIDO                  EQUIPO TÉCNICO
+    ───────────────────────              ──────────────────────
+    carpetas y archivos                  construir
+    curso.txt, indice.txt                revisar en claro
+    material y evaluaciones              cifrar y firmar
+    revisar hasta que salga limpio       emitir licencia del aula
+              │                                   │
+              └──────── avacom_recolector ────────┘
+
+La frontera es el recolector. Antes de él, carpetas. Después, paquetes.
+
+
+Los cinco pasos
+---------------
+
+  1 · Recoger
+
+          py -3 avacom_recolector.py armar "..\contenido\CO\secundaria\09\humanidades"
+
+      Recorre el árbol, deduce la taxonomía y los tipos, comprime los
+      interactivos y deja una especificación en specs\ con sus medios al lado.
+
+      Si algo impide seguir, para y lo dice. El equipo de contenido ya debería
+      haberlo visto con «revisar», pero conviene comprobarlo aquí también.
+
+  2 · Construir
+
+          py -3 avacom_empaquetador.py ejemplos C:\avacom\claro
+
+      Construye TODAS las especificaciones de specs\. No hay lista fija: lo que
+      esté ahí, entra.
+
+  3 · Revisar en claro
+
+      ES EL ÚLTIMO MOMENTO EN QUE SE PUEDE MIRAR EL CONTENIDO. Después queda
+      cifrado y solo se abre en un aula con licencia.
+
+          py -3 avacom_empaquetador.py verificar C:\avacom\claro\<paquete>
+
+      Aquí es donde se hace la revisión pedagógica de verdad: abrir el
+      manifiesto, leer los enunciados, comprobar las respuestas.
+
+  4 · Publicar
+
+          py -3 avacom_publicar.py publicar C:\avacom\claro\<paquete> C:\avacom\pub
+
+      Cada archivo con su propia clave derivada, el manifiesto entero cifrado, y
+      una firma Ed25519 sobre las huellas de todo.
+
+  5 · Emitir la licencia del aula
+
+          py -3 avacom_publicar.py licencia C:\avacom\nodoA C:\avacom\lic C:\avacom\pub\<paquete>
+
+      Una por equipo. La clave del paquete viaja dentro, envuelta para la clave
+      pública de ese equipo y de ningún otro.
+
+
+Lo que el técnico tiene que vigilar
+-----------------------------------
+
+  · Que no se publique un paquete con marcadores de posición. El empaquetador
+    avisa por nombre cuando falta un medio, y sigue adelante con un marcador
+    para poder ejercitar el contrato. Eso NO se publica.
+
+  · Que la clave privada del emisor no salga de donde está. Firma el catálogo
+    entero de AVACOM. No se copia a un portátil, no entra en el control de
+    versiones y no viaja en un correo.
+
+  · Que la clave del paquete (K_PKG_NO_DISTRIBUIR.hex) se quede fuera de lo que
+    se lleva al aula. El guion de preparación la borra; si se hace a mano, hay
+    que acordarse.
+
+  · Que los códigos curriculares existan de verdad. Hoy nada lo comprueba, y un
+    código inventado se empaqueta igual de bien que uno correcto. El error
+    aparece meses después, en una auditoría.
+
+
+Cómo lo ve después el LMS
+-------------------------
+
+No lo ve por archivo: lo pregunta por la API local. El contrato completo está
+en CONTRATO-LMS.txt. En resumen, el LMS pide:
+
+    GET /v1/catalogo?nivel=secundaria&grado=9&asignatura=Humanidades
+
+y recibe los materiales con su nivel, grado, asignatura y referencia de
+taxonomía. Recorre el árbol curricular con /v1/taxonomia sin saber de antemano
+qué forma tiene, que es lo que permite que preescolar y secundaria sean
+distintos.

@@ -1,0 +1,148 @@
+﻿AVACOM Biblioteca · mapa del codigo
+===================================
+
+Cuatro proyectos. El primero es donde esta todo lo que importa; los otros tres
+lo usan.
+
+
+    Avacom.Contenido            la biblioteca. Sin interfaz, sin MAUI.
+    Avacom.Contenido.Consola    comprobacion de punta a punta por consola
+    Avacom.Contenido.Tests      las pruebas
+    Avacom.Biblioteca.App       la aplicacion
+
+
+Avacom.Contenido · el motor
+---------------------------
+
+  Cripto\
+    CifradoArchivo.cs       Cifrado por bloques de 1 MB con AES-256-GCM.
+                            El formato del archivo esta descrito arriba del
+                            todo, en el comentario de la clase. Se cifra por
+                            bloques y no de una pieza para poder adelantar un
+                            video sin descifrar lo anterior.
+    Licencia.cs             Verifica la firma de la licencia y desenvuelve la
+                            clave del paquete con la privada de este equipo.
+    Canonico.cs             Serializacion canonica de JSON: claves ordenadas
+                            por orden de bytes, sin espacios. Tiene que
+                            coincidir BYTE A BYTE con la del empaquetador o
+                            ninguna firma valida. Es el punto mas fragil del
+                            proyecto y el que rompen las pruebas primero.
+    Blake2b.cs              La huella de contenido, 256 bits.
+    Identificador.cs        Identificadores de cinco segmentos, unicos sin
+                            coordinacion central.
+
+  Paquetes\
+    LectorDePaquete.cs      Las seis comprobaciones del contrato, en orden,
+                            TODAS antes de descifrar un solo byte. Luego abre
+                            el manifiesto con la clave que saca de la licencia.
+    BaseEnMemoria.cs        Abre el manifiesto descifrado sin dejarlo en disco.
+                            Leer el comentario entero antes de tocar esto: hay
+                            un compromiso explicito, esta justificado, y ahi
+                            esta escrito como cerrarlo del todo.
+    LecturaDeManifiesto.cs  La cara publica del manifiesto. Existe para que la
+                            clave de respuesta no pueda salir: se compara, no
+                            se lee, y en tiempo constante.
+
+  Indice\
+    BaseDeIndice.cs         El indice, que es una PROYECCION de los manifiestos
+                            instalados. Metadatos y nada mas.
+    Instalador.cs           Lo unico que escribe el indice. Escrito para poder
+                            ejecutarse dos veces sin duplicar: de eso depende
+                            que el indice se pueda borrar y reconstruir.
+    Politica.cs             Lo que el administrador desactivo. Se aplica ENCIMA
+                            del indice, sin modificarlo, para que actualizar el
+                            contenido nunca pise una decision de la escuela.
+                            Seis ambitos y solo esos seis; los valores exactos
+                            estan en la consulta.
+
+  Medios\
+    ResolutorDeMedios.cs    El unico punto por el que sale contenido
+                            descifrado, y por eso el unico sitio donde se
+                            comprueba la politica. Ojo con Etiqueta: la regla
+                            de como se deriva la clave de cada archivo vive
+                            ahi y en ningun otro lado.
+    StreamDeMedio.cs        Descifra al vuelo, bloque a bloque, leyendo del
+                            archivo y no de una copia en memoria. Se queda con
+                            su propia copia de la clave; el comentario explica
+                            por que no puede compartirla.
+    ServidorDeMedios.cs     El servidor local. Es lo unico del componente que
+                            abre un puerto, asi que es lo que mas conviene
+                            revisar. Escucha solo en 127.0.0.1, con puerto que
+                            elige el sistema y una ficha aleatoria por
+                            material. Solo GET y HEAD.
+
+  Uso\
+    RegistroDeUso.cs        Lo que deja el modo repaso: que material se abrio y
+                            cuando. Ni intento ni calificacion.
+
+
+Avacom.Biblioteca.App · la aplicacion
+-------------------------------------
+
+  MauiProgram.cs            Arranque y contenedor.
+  App.xaml                  Colores, estilos y convertidores.
+  AppShell.xaml             Las cuatro pestañas.
+
+  Paquetes\
+    EstadoDelNodo.cs        Lo que este equipo es (su clave, su licencia) y lo
+                            que puede abrir. Instala desde la carpeta pub.
+    GestorDePaquetes.cs     Mantiene abiertos los paquetes que hacen falta y ni
+                            uno mas. SQLite admite diez bases adjuntas y un
+                            despliegue grande puede tener cuarenta paquetes
+                            instalados; por eso se abren a demanda.
+
+  ViewModels\               Catalogo, Visor y Administracion.
+  Vistas\                   Las pantallas. El visor cambia segun el tipo de
+                            material: imagen, video, audio, documento,
+                            interactivo, actividad y leccion.
+
+  Resources\Styles\         Colores y tamaños. Aqui vive la regla de que nada
+                            baja de 20 puntos.
+
+  Platforms\Windows\        Punto de entrada, manifiesto y reconocimiento de
+                            densidad de pantalla.
+
+
+Avacom.Contenido.Consola · doce pasos
+-------------------------------------
+
+    dotnet run --project src\Avacom.Contenido.Consola -- ..\trabajo
+
+Es la forma mas rapida de ver el componente entero funcionando, y no necesita
+MAUI. Cada paso dice que esta comprobando. Los que mas informacion dan cuando
+algo se rompe son:
+
+    5 y 6   la politica del administrador filtra y se puede retirar
+    8       el repaso no genero intentos ni calificaciones
+    9       se borra el indice, se reconstruye, y sale identico
+    10      el servidor entrega un trozo del medio del video, y ese trozo
+            coincide byte a byte con el descifrado directo
+    11      el tipo que llega a la interfaz no tiene donde meter la respuesta
+    12      el mismo paquete con una clave de equipo ajena no abre
+
+
+Las pruebas
+-----------
+
+    dotnet test tests\Avacom.Contenido.Tests
+
+  CompatibilidadCriptoTests   Compara contra vectores fijos que produjo el
+                              empaquetador. Si estas fallan, el componente y
+                              el empaquetador han dejado de hablar el mismo
+                              idioma y nada mas va a funcionar.
+
+  ServidorDeMediosTests       Rangos normales y de sufijo, fichas invaladas,
+                              retirada de fichas, rechazo de escrituras, y la
+                              regla de la etiqueta de los medios.
+
+
+Convenciones
+------------
+
+Todo esta en español, incluidos los nombres de clases y metodos. Es
+deliberado: el equipo es hispanohablante y el dominio tambien lo es. Mezclar
+"Package" con "paquete" en el mismo archivo cuesta mas de lo que parece.
+
+Los comentarios explican POR QUE, no QUE. Si un comentario dice lo mismo que
+la linea de abajo, sobra. Los que estan cuentan una decision, un compromiso
+aceptado, o un fallo que ya se cometio una vez.

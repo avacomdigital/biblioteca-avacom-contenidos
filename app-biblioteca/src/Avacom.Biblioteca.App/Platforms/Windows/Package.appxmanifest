@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ESTE ARCHIVO HOY NO SE USA.
+
+  El proyecto se compila con WindowsPackageType = None, es decir, sin empaquetar,
+  y en ese modo este manifiesto se ignora entero. Se conserva por si algun dia se
+  decide distribuir la aplicacion empaquetada; mientras tanto, cambiar algo aqui
+  no tiene ningun efecto.
+
+  Si se vuelve al empaquetado, hay que recordar que el aislamiento de red de
+  Windows bloquea las conexiones al propio equipo, y el servidor de medios de
+  este componente escucha en 127.0.0.1. Habria que añadir una exencion con
+  CheckNetIsolation en cada aula, que es justo lo que se quiso evitar.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <Identity Name="world.avacom.biblioteca" Publisher="CN=AVACOM" Version="0.1.0.0" />
+
+  <Properties>
+    <DisplayName>AVACOM Biblioteca</DisplayName>
+    <PublisherDisplayName>AVACOM</PublisherDisplayName>
+    <Logo>$placeholder$.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="es" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="AVACOM Biblioteca"
+        Description="Biblioteca de contenido educativo de AVACOM"
+        Square150x150Logo="$placeholder$.png"
+        Square44x44Logo="$placeholder$.png"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="$placeholder$.png" />
+        <uap:SplashScreen Image="$placeholder$.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <!--
+      privateNetworkClientServer permite abrir el puerto local del servidor de
+      medios. Es lo unico de red que necesita este componente: no habla con
+      internet ni con las tabletas del aula, solo consigo mismo en 127.0.0.1.
+    -->
+    <Capability Name="privateNetworkClientServer" />
+  </Capabilities>
+</Package>

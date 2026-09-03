@@ -1,0 +1,392 @@
+﻿AVACOM · Estándar de contenido educativo
+========================================
+
+Para el equipo de contenido. Es todo lo que hay que saber, y cabe en un rato.
+
+La idea es una sola: **la estructura de carpetas ES el formato**. No hay que
+escribir código, ni JSON, ni aprender ninguna herramienta. Se trabaja con
+carpetas y archivos, como ya se trabaja, y un programa deduce el resto.
+
+
+-----------------------------------------------------------------------
+1 · EL ÁRBOL
+-----------------------------------------------------------------------
+
+    contenido\
+      CO\                                   país, dos letras, mayúsculas
+        secundaria\                         nivel
+          09\                               grado, dos cifras
+            humanidades\                    materia
+              curso.txt
+              indice.txt
+              DBA-9-03 Romanticismo\        un tema, con su código delante
+                01-Guía de lectura.pdf
+                02-Línea de tiempo.png
+                03-Comparador\              carpeta con index.html
+                99-evaluacion.txt
+                leccion.txt                 opcional
+              DBA-9-04 Modernismo\
+                01-Lectura del Nocturno.mp3
+
+Niveles que se usan hoy:
+
+    preescolar     grados: prejardin, jardin, transicion
+    primaria       grados: 01 a 05
+    secundaria     grados: 06 a 11
+
+El país, el nivel y el grado salen de la RUTA, no de un archivo. Es a propósito:
+un dato que se escribe dos veces acaba contradiciéndose, y entonces nadie sabe
+cuál de los dos vale.
+
+
+-----------------------------------------------------------------------
+2 · LOS DOS ARCHIVOS DE TEXTO
+-----------------------------------------------------------------------
+
+curso.txt · la ficha
+
+    titulo: Literatura colombiana del siglo XIX
+    materia: Humanidades · Lengua Castellana
+    idioma: es
+    version: 1
+    descripcion: Romanticismo y Modernismo. Ley 115 artículo 23.
+
+    version sube a 2 cuando se republica con cambios. El aula puede tener las
+    dos a la vez y el profesor elige.
+
+
+indice.txt · el índice curricular
+
+Es el documento que ya tienen, escrito con sangría. La sangría dice de quién
+cuelga cada cosa.
+
+    area | L115-A7 | Humanidades, lengua castellana e idiomas extranjeros
+      factor | EBC-LIT | Literatura
+        estandar | EBC-9-LIT-01 | Determino en las obras literarias...
+          tema | DBA-9-03 | El Romanticismo en la novela colombiana
+          tema | DBA-9-04 | El Modernismo y la renovación del lenguaje
+
+Tres cosas separadas por barras: tipo, código, nombre. El código puede ir vacío.
+
+EL TIPO NO SE INVENTA. Es el nombre real del nivel en el marco curricular de
+esa área. Si el documento del ministerio dice «factor», se escribe factor. Cada
+área tiene la suya y no tienen por qué parecerse:
+
+    Preescolar    proposito → actividad_rectora → experiencia → aprendizaje
+    Matemáticas   area → pensamiento → estandar → tema
+    Lenguaje      area → factor → estandar → tema
+
+Forzarlas todas a la misma forma para que «quede parejo» es el error que más
+caro se paga: el contenido deja de corresponder al currículo real y el colegio
+lo nota en la primera revisión.
+
+
+-----------------------------------------------------------------------
+3 · CÓMO SE NOMBRAN LOS ARCHIVOS
+-----------------------------------------------------------------------
+
+    NN-Título del material.extensión
+
+    01-Guía de lectura del Romanticismo.pdf
+    02-Línea de tiempo.png
+    03-Comparador de movimientos\        (carpeta con index.html)
+    99-evaluacion.txt
+
+  El NÚMERO manda el orden en que se da. Deja huecos (10, 20, 30) para poder
+  meter algo en medio sin renumerar todo.
+
+  El TÍTULO es lo que ve el profesor en la pantalla. Se escribe con tildes y
+  espacios, normal.
+
+  La EXTENSIÓN decide el tipo. No hay que elegir nada:
+
+      .png .jpg .webp .svg     imagen
+      .pdf                     documento
+      .mp4 .webm               vídeo
+      .mp3 .wav .m4a           audio
+      carpeta con guion.txt    lección completa  ← lo normal
+      carpeta con index.html   juego o animación suelto
+      archivo con «evaluacion» en el nombre    evaluación
+      archivo con «banco» en el nombre         banco de preguntas
+
+Lo que no esté en esa lista se ignora, y el revisor lo dice por su nombre. Un
+.docx o un .pptx no se pueden mostrar: hay que exportarlos a PDF antes.
+
+
+-----------------------------------------------------------------------
+4 · LA EVALUACIÓN
+-----------------------------------------------------------------------
+
+Se escribe como la escribiría un profesor. Nada de formatos raros.
+
+    titulo: Evaluación de la unidad
+
+    P: ¿En qué año se publicó María, de Jorge Isaacs?
+    R: 1867
+    peso: 1
+    dificultad: baja
+    retro: 1867, en plena consolidación del Romanticismo.
+
+    P: Compara cómo tratan la naturaleza los dos movimientos.
+    abierta
+    peso: 3
+
+    RUBRICA
+    Uso de términos técnicos | Emplea con precisión al menos dos y los aplica | 2
+    Evidencia textual | Sostiene lo que afirma citando el material | 2
+
+Si hay una sola pregunta abierta, la RÚBRICA es obligatoria. Sin ella, dos
+profesores dan notas distintas al mismo texto y la familia reclama con razón.
+El revisor avisa si falta.
+
+
+-----------------------------------------------------------------------
+5 · LA LECCIÓN COMPLETA: texto, vídeo, audio, imágenes, PDF y quiz
+-----------------------------------------------------------------------
+
+Es el formato principal, y el que conviene usar por defecto. Una carpeta con
+un guion.txt dentro y los medios al lado:
+
+    02-Del Romanticismo al Modernismo\
+        guion.txt
+        linea-tiempo.png
+        valle.mp4
+        nocturno.wav
+        guia-lectura.pdf
+
+De ahí sale una lección en pantalla con barra de progreso, índice, los medios
+integrados y las preguntas de comprobación intercaladas.
+
+EL EQUIPO DE CONTENIDO NO ESCRIBE HTML, Y ES A PROPÓSITO.
+
+Si les diéramos una plantilla HTML para copiar, en tres meses habría veinte
+lecciones con veinte diseños: alguien toca un color, otro sube un tamaño «solo
+un poco», y el estándar duró una semana. Pasa siempre, y no es culpa de nadie.
+
+Así que escriben CONTENIDO y el sistema pone la FORMA. Si mañana hay que
+cambiar el diseño de todas las lecciones del catálogo, se cambia en un sitio y
+se vuelven a generar.
+
+
+EL GUION
+
+    titulo: Del Romanticismo al Modernismo
+    objetivo: Reconoce rasgos de los dos movimientos en obras del siglo XIX
+    duracion: 50
+
+    ## Por dónde empezamos
+
+    Un párrafo normal. Las líneas seguidas forman un párrafo; una línea en
+    blanco empieza otro.
+
+    > Una idea que hay que destacar.
+
+    - primer punto de una lista
+    - segundo punto
+
+    IMAGEN: linea-tiempo.png | Los dos movimientos y sus fechas
+    VIDEO: valle.mp4 | El valle del Cauca
+    AUDIO: nocturno.wav | Nocturno, leído en voz alta
+    PDF: guia-lectura.pdf | Guía de lectura completa
+
+    QUIZ
+    P: El paisaje en la novela romántica funciona sobre todo como:
+    - decoración para ambientar la época
+    - espejo del estado de ánimo de los personajes *
+    - una forma de alargar el relato
+    retro: Llueve cuando el personaje sufre. El paisaje acompaña, no adorna.
+
+    ## Siguiente sección
+
+Ocho cosas y ninguna más:
+
+    titulo, objetivo, duracion    la cabecera
+    ##                            una sección; sale en el índice
+    texto normal                  un párrafo
+    >                             una idea destacada
+    -                             un punto de lista
+    IMAGEN / VIDEO / AUDIO / PDF  archivo | pie de foto
+    QUIZ                          pregunta, opciones y explicación
+
+El asterisco marca la opción correcta. Nada más.
+
+
+QUÉ SALE
+
+  · Barra de progreso arriba, siempre visible. Avanza según las secciones que
+    se van viendo y las preguntas que se van contestando.
+  · Índice al principio, si hay más de una sección.
+  · Los medios integrados, cada uno con su visor.
+  · El quiz responde al momento: marca la correcta, explica y suma.
+  · Al terminar, una tarjeta de cierre con los aciertos.
+
+Las preguntas del QUIZ NO son nota. Son para que el alumno sepa si conviene
+repasar. La nota sale del examen, y el examen saca del banco.
+
+
+REVISIÓN AUTOMÁTICA
+
+El revisor comprueba que cada archivo citado exista, que su extensión
+corresponda al tipo, que cada QUIZ tenga opciones y una marcada con asterisco,
+y que ningún vídeo pase de 300 MB.
+
+
+-----------------------------------------------------------------------
+6 · EL BANCO DE PREGUNTAS
+-----------------------------------------------------------------------
+
+Un archivo con «banco» en el nombre. Es el repertorio del que el examen saca
+reactivos, y por eso dos alumnos no ven el mismo examen.
+
+    titulo: Banco · Literatura colombiana del siglo XIX
+    extraer: 4
+    por_dificultad: baja 1, media 2, alta 1
+
+    P: ¿En qué año se publicó María, de Jorge Isaacs?
+    R: 1867
+    dificultad: baja
+    peso: 1
+
+    P: Analiza cómo el ritmo del Nocturno refuerza su sentido.
+    abierta
+    dificultad: alta
+    peso: 4
+
+    RUBRICA
+    Uso de términos técnicos | Emplea con precisión al menos dos | 2
+
+Se escribe igual que una evaluación. La diferencia no es de formato, es de
+propósito:
+
+    evaluacion   se da entera, las mismas preguntas siempre, dentro de la lección
+    banco        el examen saca N al azar, y cada alumno ve algo distinto
+
+Por eso el banco NO entra en la secuencia de la lección: no se «da» en clase.
+
+El revisor avisa si la mezcla pide más preguntas de una dificultad de las que
+hay, y si el banco es tan pequeño que dos alumnos verían casi lo mismo. La
+regla práctica: al menos el doble de preguntas de las que extrae el examen.
+
+
+-----------------------------------------------------------------------
+7 · JUEGOS Y ANIMACIONES SUELTOS
+-----------------------------------------------------------------------
+
+Una carpeta con index.html dentro. Eso es todo. Puede ser un juego, una
+animación, una simulación o lo que sea.
+
+En contenido\PLANTILLA hay una lista para copiar que ya cumple todo.
+
+TRES REGLAS QUE NO SE PUEDEN ROMPER
+
+  1. NADA DE INTERNET.
+
+     Ni una sola dirección que empiece por https://. El aula NO TIENE conexión.
+     Un <script src="https://..."> deja la pantalla en blanco delante de treinta
+     alumnos, y sin ningún mensaje que explique por qué.
+
+     Si hace falta una biblioteca, se descarga y se mete en la misma carpeta.
+     El revisor detecta esto y lo dice con el nombre del archivo.
+
+  2. EL PUNTO DE ENTRADA SE LLAMA index.html. Siempre.
+
+  3. NADA DE localStorage NI sessionStorage.
+
+     El interactivo se sirve desde una dirección que cambia en cada arranque,
+     así que lo que se guarde ahí se pierde. Se usan variables normales.
+
+TRES QUE SE ROMPEN SIN QUERER
+
+  4. Se ve a CUATRO METROS. Nada por debajo de 20 píxeles.
+
+  5. Se toca con el DEDO, no con el ratón. Botones de 64 píxeles de alto como
+     mínimo, y nada importante colgando de :hover, que en táctil no existe.
+
+  6. Funciona a 1920x1080 y también encogido. Medidas relativas.
+
+OPCIONAL · avisar del resultado
+
+    if (window.avacom && window.avacom.terminado) {
+      window.avacom.terminado({ aciertos: 7, total: 10 });
+    }
+
+Va dentro de un if a propósito: el interactivo tiene que funcionar igual si se
+abre a pelo en un navegador para probarlo.
+
+
+-----------------------------------------------------------------------
+8 · EL FLUJO COMPLETO
+-----------------------------------------------------------------------
+
+  1. Copiar contenido\PLANTILLA a la ruta que toque.
+  2. Rellenar curso.txt e indice.txt.
+  3. Crear una carpeta por tema y meter el material numerado.
+  4. Revisar:
+
+         py -3 avacom_recolector.py revisar "contenido\CO\secundaria\09\humanidades"
+
+     Dice en castellano qué falta y qué conviene arreglar. Se puede correr
+     tantas veces como haga falta; no cambia nada.
+
+  5. Cuando salga limpio, armar:
+
+         py -3 avacom_recolector.py armar "contenido\CO\secundaria\09\humanidades"
+
+  6. Y construir el paquete:
+
+         py -3 avacom_empaquetador.py ejemplos C:\avacom\claro
+
+  A partir de ahí lo recoge el equipo técnico: cifrar, firmar y emitir la
+  licencia del aula.
+
+
+-----------------------------------------------------------------------
+9 · CUATRO REGLAS QUE SE PAGAN CARO SI SE ROMPEN
+-----------------------------------------------------------------------
+
+  1. LOS TÍTULOS SON REFERENCIAS.
+
+     La referencia de cada material se saca de su título. Si se cambia el
+     título, para el sistema es un material NUEVO, y el examen de hace seis
+     meses que apuntaba al viejo deja de poder explicarse.
+
+     Corregir una errata: adelante, pero avisando al equipo técnico.
+     Cambiar el título entero: eso es material nuevo, y está bien que lo sea.
+
+  2. DOS MATERIALES NO PUEDEN LLAMARSE IGUAL.
+
+     Ni siquiera en temas distintos. El revisor lo detecta y no deja seguir.
+     «Lámina» no es un título: «Lámina de la célula animal» sí.
+
+  3. LOS DERECHOS SE RESUELVEN ANTES.
+
+     El sistema cifra y firma, pero no comprueba si el material se puede usar.
+     Un autor del siglo XX casi nunca está en dominio público. Ante la duda,
+     material propio.
+
+  4. SE ESCRIBE PARA LEERSE A CUATRO METROS.
+
+     No es un detalle de diseño, es la condición del producto. Un párrafo de
+     ocho líneas en una lámina no se lee desde la última fila. Una idea por
+     lámina.
+
+
+-----------------------------------------------------------------------
+10 · LO QUE HOY NO EXISTE
+-----------------------------------------------------------------------
+
+Conviene saberlo para no esperarlo:
+
+  · No hay editor visual. Se trabaja con carpetas y archivos de texto. Es lo
+    más simple que funciona hoy; un editor llega cuando el catálogo pase de una
+    decena de cursos.
+
+  · Nada comprueba que un código curricular exista de verdad. EBC-9-LIT-01 y
+    EBC-9-XXX-99 se aceptan igual. La responsabilidad es de quien lo escribe.
+
+  · No hay estados de borrador y aprobado. La revisión ocurre cuando el
+    material todavía está en claro, antes de cifrarlo, y depende de que alguien
+    la haga.
+
+  · La voz generada todavía no funciona sin conexión. Los audios hay que
+    grabarlos o traerlos hechos.

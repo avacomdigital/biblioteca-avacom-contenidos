@@ -1,0 +1,18 @@
+﻿# ------------------------------------------------------------------
+# FICHA DEL CURSO
+#
+# El pais, el nivel y el grado NO se escriben aqui: salen de la ruta
+# de carpetas. Asi no pueden contradecirse, que es el error mas comun
+# cuando un dato se escribe dos veces.
+#
+# Las lineas que empiezan por # son comentarios y no se leen.
+# ------------------------------------------------------------------
+
+titulo: Nombre del curso como lo vera el profesor
+materia: Nombre completo del area, tal como lo llama el ministerio
+idioma: es
+version: 1
+descripcion: Una o dos frases. Que cubre y a que marco curricular responde.
+
+# version: sube a 2 cuando republiques el curso con cambios.
+#   El aula puede tener las dos a la vez.

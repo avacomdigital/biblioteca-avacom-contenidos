@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Del Romanticismo al Modernismo</title>
+<style>
+:root{
+  --rojo:#E5262B; --rojo-oscuro:#C1191D;
+  --papel:#E9EDF3; --hundido:#E3E7EE;
+  --sombra:#C2C9D6; --luz:#FFFFFF;
+  --tinta:#1D1D1F; --suave:#6E6E73; --borde:#D6DCE6;
+  --bien:#1F8A4C; --mal:#E5262B;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--papel);color:var(--tinta);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  font-size:21px;line-height:1.65;
+}
+
+/* --- barra de progreso, siempre visible --- */
+#progreso{position:fixed;top:0;left:0;right:0;height:8px;background:var(--hundido);z-index:100}
+#barra{height:100%;width:0;background:var(--rojo);transition:width .35s ease}
+#etiqueta{
+  position:fixed;top:18px;right:24px;z-index:100;
+  background:var(--papel);border-radius:999px;padding:8px 20px;font-size:16px;
+  box-shadow:5px 5px 12px var(--sombra),-5px -5px 12px var(--luz);
+}
+
+.marco{max-width:1080px;margin:0 auto;padding:64px 40px 120px}
+
+/* --- portada --- */
+.portada{margin-bottom:56px}
+.cinta{display:inline-block;background:var(--rojo);color:#fff;font-size:14px;
+  letter-spacing:1.5px;padding:6px 18px;border-radius:999px;margin-bottom:18px}
+h1{font-size:46px;line-height:1.2;margin:0 0 14px;letter-spacing:-.02em}
+.objetivo{font-size:23px;color:var(--suave);margin:0 0 8px;max-width:44ch}
+.duracion{font-size:17px;color:var(--suave)}
+
+/* --- indice --- */
+.indice{
+  background:var(--hundido);border-radius:22px;padding:26px 32px;margin-bottom:56px;
+  box-shadow:inset 4px 4px 10px var(--sombra),inset -4px -4px 10px var(--luz);
+}
+.indice h2{font-size:15px;letter-spacing:1.4px;color:var(--rojo-oscuro);margin:0 0 14px}
+.indice ol{margin:0;padding-left:26px}
+.indice li{padding:5px 0;font-size:19px}
+.indice a{color:var(--tinta);text-decoration:none}
+.indice a:hover{color:var(--rojo)}
+
+/* --- secciones --- */
+section{margin-bottom:64px;scroll-margin-top:60px}
+h2.sec{font-size:33px;margin:0 0 22px;display:flex;align-items:center;gap:14px}
+h2.sec::before{content:'';width:6px;height:32px;background:var(--rojo);border-radius:3px;flex:0 0 6px}
+p{margin:0 0 22px;max-width:66ch}
+ul.puntos{margin:0 0 24px;padding:0;list-style:none;max-width:66ch}
+ul.puntos li{position:relative;padding:8px 0 8px 30px}
+ul.puntos li::before{content:'';position:absolute;left:8px;top:19px;width:8px;height:8px;
+  border-radius:50%;background:var(--rojo)}
+.destacado{
+  border-left:5px solid var(--rojo);background:var(--hundido);
+  border-radius:0 18px 18px 0;padding:22px 28px;margin:0 0 26px;
+  font-size:23px;max-width:66ch;
+}
+
+/* --- medios --- */
+figure{margin:0 0 30px}
+figure img,figure video{width:100%;border-radius:20px;display:block;
+  box-shadow:8px 8px 18px var(--sombra),-8px -8px 18px var(--luz)}
+figure audio{width:100%;height:56px}
+figcaption{font-size:17px;color:var(--suave);margin-top:12px;text-align:center}
+.medio-caja{
+  background:var(--papel);border-radius:22px;padding:20px;margin-bottom:30px;
+  box-shadow:8px 8px 18px var(--sombra),-8px -8px 18px var(--luz);
+}
+.pdf-enlace{
+  display:flex;align-items:center;gap:18px;text-decoration:none;color:var(--tinta);
+  background:var(--papel);border-radius:20px;padding:24px 28px;margin-bottom:30px;
+  box-shadow:7px 7px 16px var(--sombra),-7px -7px 16px var(--luz);
+}
+.pdf-enlace .icono{
+  width:56px;height:56px;flex:0 0 56px;border-radius:14px;background:var(--rojo);
+  color:#fff;display:grid;place-items:center;font-size:15px;font-weight:700;
+}
+.pdf-enlace b{display:block;font-size:21px}
+.pdf-enlace span{font-size:16px;color:var(--suave)}
+
+/* --- quiz --- */
+.quiz{
+  background:var(--papel);border-radius:24px;padding:32px;margin:0 0 34px;
+  box-shadow:9px 9px 20px var(--sombra),-9px -9px 20px var(--luz);
+}
+.quiz .rotulo{font-size:14px;letter-spacing:1.4px;color:var(--rojo-oscuro);
+  font-weight:700;margin-bottom:12px}
+.quiz .enunciado{font-size:26px;font-weight:600;margin-bottom:24px;line-height:1.4}
+.opcion{
+  display:block;width:100%;text-align:left;min-height:72px;
+  padding:18px 26px;margin-bottom:14px;font-size:21px;font-family:inherit;
+  color:var(--tinta);background:var(--papel);
+  border:3px solid transparent;border-radius:18px;cursor:pointer;
+  box-shadow:6px 6px 14px var(--sombra),-6px -6px 14px var(--luz);
+  transition:transform .12s;
+}
+.opcion:active{transform:translateY(2px)}
+.opcion.bien{border-color:var(--bien)}
+.opcion.mal{border-color:var(--mal)}
+.opcion[disabled]{cursor:default;opacity:.75}
+.opcion.bien[disabled]{opacity:1}
+.respuesta{font-size:19px;margin-top:16px;padding:16px 22px;border-radius:16px;
+  background:var(--hundido);display:none}
+.respuesta.vista{display:block}
+
+/* --- cierre --- */
+.cierre{
+  background:var(--hundido);border-radius:26px;padding:44px;text-align:center;
+  box-shadow:inset 5px 5px 12px var(--sombra),inset -5px -5px 12px var(--luz);
+}
+.cierre h2{font-size:32px;margin:0 0 10px}
+.cierre .marca{font-size:52px;font-weight:700;color:var(--rojo);margin:18px 0 6px}
+.cierre p{color:var(--suave);margin:0 auto;max-width:52ch}
+
+@media (max-width:820px){
+  body{font-size:19px}
+  .marco{padding:48px 22px 90px}
+  h1{font-size:34px} h2.sec{font-size:27px}
+  .quiz .enunciado{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div id="progreso"><div id="barra"></div></div>
+<div id="etiqueta">0%</div>
+
+<div class="marco">
+
+  <div class="portada">
+    <div class="cinta">LECCION</div>
+    <h1>Del Romanticismo al Modernismo</h1>
+    <p class="objetivo">Reconoce rasgos de los dos movimientos en obras del siglo XIX</p>
+    <div class="duracion">50 minutos</div>
+  </div>
+
+  <nav class="indice"><h2>EN ESTA LECCION</h2><ol><li><a href="#s1">Por donde empezamos</a></li><li><a href="#s2">Tres rasgos que se reconocen al leer</a></li><li><a href="#s3">El Modernismo cambia de oido</a></li><li><a href="#s4">Para seguir por tu cuenta</a></li></ol></nav>
+
+  <section id="s1">
+<h2 class="sec">Por donde empezamos</h2>
+<p>El Romanticismo llega a America Latina cuando las republicas nuevas buscan contarse a si mismas. No es solo una moda literaria: es una forma de mirar el propio pais, y por eso las novelas de esa epoca se detienen tanto en el paisaje.</p>
+<figure><img src="linea-tiempo.png" alt="Los dos movimientos y sus fechas" loading="lazy"><figcaption>Los dos movimientos y sus fechas</figcaption></figure>
+<div class="destacado">Si reconoces la perdida que hay en el centro, entiendes por que el narrador</div>
+<div class="destacado">cuenta en pasado.</div>
+</section>
+
+<section id="s2">
+<h2 class="sec">Tres rasgos que se reconocen al leer</h2>
+<ul class="puntos"><li>El sentimiento manda sobre el argumento. Importa menos que pasa que como lo</li></ul>
+<p>vive quien lo cuenta.</p>
+<ul class="puntos"><li>El paisaje no decora: acompaña. Llueve cuando el personaje sufre.</li><li>Hay una perdida en el centro. Casi siempre alguien recuerda algo que ya no</li></ul>
+<p>puede volver.</p>
+<figure><video controls preload="metadata" src="valle.mp4"></video><figcaption>El valle del Cauca, donde transcurre Maria</figcaption></figure>
+<div class="quiz"><div class="rotulo">COMPRUEBA SI LO ENTENDISTE</div><div class="enunciado">El paisaje en la novela romantica funciona sobre todo como:</div><button class="opcion" data-correcta="0" onclick="responder(this,false)">decoracion para ambientar la epoca</button><button class="opcion" data-correcta="1" onclick="responder(this,true)">espejo del estado de animo de los personajes</button><button class="opcion" data-correcta="0" onclick="responder(this,false)">una forma de alargar el relato</button><div class="respuesta">Llueve cuando el personaje sufre. El paisaje acompaña, no adorna.</div></div>
+</section>
+
+<section id="s3">
+<h2 class="sec">El Modernismo cambia de oido</h2>
+<p>Hacia el final del siglo aparece una generacion que ya no quiere contar sentimientos: quiere construir un objeto sonoro. El poema empieza a escribirse casi como una partitura, y el ritmo pasa a ser tema.</p>
+<div class="medio-caja"><audio controls preload="metadata" src="nocturno.wav"></audio><figcaption>Nocturno, de Jose Asuncion Silva, leido en voz alta</figcaption></div>
+<p>Escuchalo antes de analizarlo. El vaiven del ritmo se percibe mucho antes de poder explicarlo, y esa es la puerta de entrada.</p>
+<div class="quiz"><div class="rotulo">COMPRUEBA SI LO ENTENDISTE</div><div class="enunciado">Que recurso predomina en la poesia modernista?</div><button class="opcion" data-correcta="0" onclick="responder(this,false)">la rima consonante estricta</button><button class="opcion" data-correcta="1" onclick="responder(this,true)">la aliteracion y la repeticion ritmica</button><button class="opcion" data-correcta="0" onclick="responder(this,false)">el verso libre sin ninguna medida</button><div class="respuesta">El Modernismo trabaja el poema casi como una partitura.</div></div>
+</section>
+
+<section id="s4">
+<h2 class="sec">Para seguir por tu cuenta</h2>
+<a class="pdf-enlace" href="guia-lectura.pdf" target="_blank" rel="noopener"><span class="icono">PDF</span><span><b>Guia de lectura completa, con ejercicios</b><span>Se abre en una ventana aparte</span></span></a>
+<div class="quiz"><div class="rotulo">COMPRUEBA SI LO ENTENDISTE</div><div class="enunciado">En que año se publico Maria, de Jorge Isaacs?</div><button class="opcion" data-correcta="0" onclick="responder(this,false)">1837</button><button class="opcion" data-correcta="1" onclick="responder(this,true)">1867</button><button class="opcion" data-correcta="0" onclick="responder(this,false)">1894</button><div class="respuesta">1867, en plena consolidacion del Romanticismo en America Latina.</div></div>
+</section>
+
+  <div class="cierre" id="cierre"><h2>Terminaste la leccion</h2><div class="marca" id="resultado">—</div><p>Respuestas correctas de las preguntas de comprobacion. No cuenta como nota: sirve para saber si conviene repasar algo.</p></div>
+</div>
+
+<script>
+window.__TOTAL__ = 7;
+window.__QUIZ__  = 3;
+
+// Progreso: cuenta las secciones que ya se han visto y los quiz contestados.
+// No usa almacenamiento del navegador a proposito: esto se sirve desde una
+// direccion que cambia en cada arranque y lo guardado se perderia igual.
+const TOTAL = window.__TOTAL__;
+const vistas = new Set();
+let contestados = 0, aciertos = 0;
+
+function pintarProgreso(){
+  const hecho = vistas.size + contestados;
+  const pct = TOTAL ? Math.min(100, Math.round(hecho * 100 / TOTAL)) : 0;
+  document.getElementById('barra').style.width = pct + '%';
+  document.getElementById('etiqueta').textContent = pct + '% de la leccion';
+  if (window.avacom && window.avacom.progreso) {
+    window.avacom.progreso({ porcentaje: pct, aciertos: aciertos, quiz: contestados });
+  }
+  if (pct === 100) mostrarCierre();
+}
+
+const observador = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) { vistas.add(e.target.id); pintarProgreso(); }
+  });
+}, { rootMargin: '0px 0px -55% 0px' });
+
+document.querySelectorAll('section[id]').forEach(s => observador.observe(s));
+
+function responder(boton, correcta, idQuiz){
+  const caja = boton.closest('.quiz');
+  if (caja.dataset.hecho) return;
+  caja.dataset.hecho = '1';
+
+  caja.querySelectorAll('.opcion').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.correcta === '1') b.classList.add('bien');
+  });
+  if (!correcta) boton.classList.add('mal');
+
+  const r = caja.querySelector('.respuesta');
+  if (r) r.classList.add('vista');
+
+  contestados++;
+  if (correcta) aciertos++;
+  pintarProgreso();
+}
+
+function mostrarCierre(){
+  const c = document.getElementById('cierre');
+  if (!c || c.dataset.visto) return;
+  c.dataset.visto = '1';
+  const m = document.getElementById('resultado');
+  if (m && window.__QUIZ__ > 0) {
+    m.textContent = aciertos + ' de ' + window.__QUIZ__;
+  }
+  if (window.avacom && window.avacom.terminado) {
+    window.avacom.terminado({ aciertos: aciertos, total: window.__QUIZ__ });
+  }
+}
+
+pintarProgreso();
+
+</script>
+</body>
+</html>

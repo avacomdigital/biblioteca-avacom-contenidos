@@ -1,0 +1,8 @@
+﻿# Ficha del curso. El pais, el nivel y el grado NO se escriben aqui:
+# salen de la ruta de carpetas, para que no puedan contradecirse.
+
+titulo: Literatura colombiana del siglo XIX
+materia: Humanidades · Lengua Castellana
+idioma: es
+version: 1
+descripcion: Romanticismo y Modernismo. Ley 115 articulo 23. Estandares Basicos de Competencias del Lenguaje, factor Literatura, grados 8 a 9. Obras en dominio publico.

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>Avacom.Contenido</RootNamespace>
+    <!-- Biblioteca sin interfaz. Se prueba sola y la usa tanto la app de la
+         pantalla interactiva como, mas adelante, la del alumno. -->
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.*" />
+    <!-- .NET no trae Ed25519 ni X25519. Es la unica dependencia de
+         criptografia del proyecto y conviene que siga siendo la unica. -->
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.*" />
+  </ItemGroup>
+</Project>

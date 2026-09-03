@@ -1,0 +1,295 @@
+﻿AVACOM · Componente de contenido educativo
+==========================================
+
+Que es esto
+-----------
+
+La biblioteca de contenido educativo de AVACOM. Es una aplicacion de escritorio
+que corre en el equipo maestro que va dentro de la pantalla interactiva de 86
+pulgadas del aula, y su trabajo es uno solo: guardar el material educativo de
+forma que nadie pueda copiarlo, y mostrarlo en clase.
+
+NO es el LMS. El LMS lleva alumnos, grupos, examenes y calificaciones, y se
+desarrolla aparte. Este componente es la biblioteca: sabe que material hay
+instalado y sabe abrirlo. Nada mas. Esa separacion es a proposito y hay que
+respetarla, porque permite que el equipo de contenido y el equipo de LMS
+trabajen sin pisarse.
+
+Los dos se hablan por una API local de solo lectura. El LMS pregunta que hay y
+pide que se muestre algo; no abre archivos por su cuenta ni toca esta base de
+datos. Todo eso esta en CONTRATO-LMS.txt, que es lo unico que el otro equipo
+necesita leer.
+
+El aula no tiene internet. No "puede quedarse sin internet": no lo tiene. Todo
+lo que hay aqui funciona con el cable de red desconectado, y esa es la
+condicion que manda sobre cualquier otra decision.
+
+
+Tres documentos, uno por equipo
+-------------------------------
+
+  ESTANDAR-CONTENIDO.txt    Para el EQUIPO DE CONTENIDO. Como se estructura el
+                            material: carpetas por pais, nivel, grado y materia.
+                            No hace falta escribir JSON ni saber programar.
+
+  CONTRATO-LMS.txt          Para el EQUIPO DE LMS. Los cinco puntos de enlace de
+                            la API local, la forma de cada respuesta y las
+                            reglas. No obliga a leer este codigo.
+
+  INVENTARIO.txt            Para QUIEN DESARROLLA este componente. Que es cada
+                            archivo y por que esta.
+
+Los tres se pueden entregar sueltos.
+
+
+Lo primero: probar que funciona
+-------------------------------
+
+Doble clic en:
+
+    PROBAR-TODO.cmd
+
+Tarda unos minutos la primera vez. Corre siete etapas y para en la primera que
+falle diciendo cual es. Si termina en verde, todo lo de abajo esta comprobado
+en la maquina donde se ejecuto.
+
+Para verla funcionando, doble clic en:
+
+    EJECUTAR-APLICACION.cmd
+
+
+Lo que hace falta instalar
+--------------------------
+
+  1. SDK de .NET 10
+     https://dotnet.microsoft.com/download
+     Comprobar con:   dotnet --version
+
+  2. Carga de trabajo de MAUI
+
+         dotnet workload install maui
+
+     Si se instala Visual Studio 2026 con la carga "Desarrollo de aplicaciones
+     de interfaz de usuario multiplataforma con .NET", ya viene incluida.
+
+     No hace falta instalar nada mas. La aplicacion se compila autocontenida
+     respecto al SDK de aplicaciones de Windows, asi que no depende de que ese
+     tiempo de ejecucion este ya en la maquina. Pesa mas y a cambio se puede
+     llevar a un aula sin preparar nada antes.
+
+  3. Python 3.10 o superior
+     https://www.python.org/downloads/
+     IMPORTANTE: marcar "Add Python to PATH" durante la instalacion.
+
+         py -3 -m pip install cryptography pillow reportlab
+
+     Python NO forma parte de la aplicacion. Es la herramienta con la que el
+     equipo de contenido arma y firma los paquetes. En el aula no hay Python.
+
+  4. Opcional, solo para regenerar los videos de muestra: FFmpeg.
+     Sin el, todo lo demas funciona igual; solo se saltan los dos videos.
+
+Windows 10 version 1809 o superior. En versiones anteriores el componente de
+navegacion incrustado no es fiable, y de el dependen el visor de documentos y
+el de material interactivo.
+
+
+Que hay en cada carpeta
+-----------------------
+
+Resumen. El detalle archivo por archivo esta en INVENTARIO.txt.
+
+  app-biblioteca\        La aplicacion y la biblioteca. Es lo que se compila.
+    src\Avacom.Contenido\           el motor: cifrado, paquetes, indice, medios
+    src\Avacom.Contenido.Consola\   comprobacion de punta a punta, sin interfaz
+    src\Avacom.Biblioteca.App\      la aplicacion
+    tests\                          las pruebas
+
+  contenido\             Donde trabaja el equipo de contenido. Un arbol de
+                         carpetas por pais, nivel, grado y materia. Dentro esta
+                         PLANTILLA\, que se copia para empezar un curso nuevo.
+
+  paquetes\              Herramientas en Python. El recolector convierte el
+                         arbol de carpetas en una especificacion; el
+                         empaquetador y el publicador cifran y firman.
+
+  esquema\               Un archivo: contenido.sql. Ocho tablas y tres vistas,
+                         que es todo lo que este componente escribe en disco.
+                         No depende de ninguna otra base. La aplicacion lo
+                         aplica sola la primera vez.
+
+  trabajo\               Se crea al ejecutar la prueba. Contiene los paquetes
+                         publicados, la licencia y las claves de este equipo.
+                         Es material de prueba: no se sube al control de
+                         versiones ni se copia a un aula.
+
+
+Como esta hecho, en cinco minutos
+---------------------------------
+
+Hay tres piezas y conviene entender la relacion antes de tocar codigo.
+
+EL PAQUETE. Una carpeta con cuatro cosas:
+
+    formato.json      la ficha en claro: pais, nivel, asignatura, titulo.
+                      Es lo unico legible sin licencia, y esta asi para que el
+                      administrador pueda decidir si instalarlo sin abrirlo.
+    manifiesto.enc    la base de datos del paquete, cifrada entera. Dentro
+                      estan la estructura curricular, los elementos, las
+                      preguntas y las claves de respuesta.
+    medios\           cada archivo cifrado por separado, con nombre de huella.
+    firma.sig         firma Ed25519 sobre las huellas de todo lo anterior.
+
+EL INDICE. Una base SQLite en el equipo con los metadatos de lo instalado:
+titulo, tipo, nivel, materia, version, huella. Ni un byte de contenido. Es una
+PROYECCION de los manifiestos, no un catalogo propio: si se borra, se
+reconstruye escaneando los paquetes y da exactamente lo mismo. La etapa 5 de la
+prueba lo demuestra borrandolo y rehaciendolo.
+
+Son ocho tablas, y ninguna es del LMS. Aqui no hay alumnos, ni grupos, ni
+calificaciones. Lo unico que roza al LMS es una columna, persona_id, que admite
+nulo porque esta biblioteca se puede consultar sin identificarse. Ver
+esquema\LEEME.txt.
+
+LA LICENCIA. Un archivo firmado que, para cada paquete autorizado, lleva su
+clave de cifrado envuelta para la clave publica de UN equipo concreto. Copiar
+un paquete a una memoria y llevarselo a otra maquina no sirve: sin la clave
+privada de ese equipo, la clave del paquete no se puede desenvolver, y los
+medios son ruido. La etapa 6 de la prueba lo demuestra.
+
+
+La parte menos obvia: reproducir video cifrado
+----------------------------------------------
+
+Merece la pena leer esto antes de tocar la carpeta Medios, porque el diseño
+parece raro hasta que se entiende el problema.
+
+El reproductor y el componente de navegacion no saben leer de un flujo de
+bytes: quieren una ruta o una direccion. Las dos salidas faciles son malas.
+Escribir el video descifrado en un archivo temporal deja el contenido en claro
+en el disco, que es exactamente lo que el cifrado venia a evitar. Cargarlo
+entero en memoria tampoco vale: un video de clase pesa cientos de megabytes.
+
+Lo que se hace: la aplicacion levanta un servidor diminuto que escucha SOLO en
+127.0.0.1, en un puerto que elige el sistema. Cada material se publica bajo una
+ficha aleatoria de 128 bits. El reproductor pide trozos por rango, y cada trozo
+se descifra en el momento leyendo solo ese bloque del archivo. Al cerrar el
+visor la ficha se anula y esa direccion deja de existir.
+
+Ninguna tableta del aula lo alcanza, el puerto cambia en cada arranque, y en
+disco no hay nunca nada en claro. Por eso el material se cifra por bloques de
+un megabyte en vez de de una pieza: adelantar un video no obliga a descifrar lo
+anterior.
+
+
+Decisiones que ya estan tomadas y no conviene deshacer
+------------------------------------------------------
+
+Cada una tiene su motivo escrito en el codigo, junto a la linea que la aplica.
+
+  La aplicacion se compila SIN empaquetar (WindowsPackageType = None).
+      Empaquetada corre dentro del aislamiento de red de Windows, que bloquea
+      las conexiones al propio equipo. El servidor de medios escucha justo ahi.
+      Empaquetada no reproduciria ni un video sin una exencion manual por aula.
+
+  El indice es una proyeccion, nunca una fuente de verdad.
+      El manifiesto del paquete manda. Si el indice y el manifiesto discrepan,
+      el que se equivoca es el indice. En cuanto se le añada un dato que no
+      este en ningun paquete, deja de poder reconstruirse y se convierte en un
+      segundo catalogo que hay que mantener sincronizado a mano.
+
+  La clave de respuesta no sale del manifiesto.
+      El tipo que llega a la interfaz no tiene ni un campo donde meterla. Solo
+      se puede comparar, con comparacion en tiempo constante. La etapa 5 de la
+      prueba lo comprueba por reflexion sobre el propio tipo.
+
+  El manifiesto descifrado nunca se queda en disco.
+      Lleva las claves de respuesta de todos los examenes del año. Ver
+      BaseEnMemoria.cs, que explica el compromiso exacto que se acepto y como
+      cerrarlo del todo el dia que la capa de SQLite lo permita.
+
+  El modo repaso no genera nota.
+      Deja constancia de que el alumno abrio un material y nada mas. Ni
+      intento, ni calificacion. La etapa 5 lo comprueba contando filas.
+
+  Se usa la tipografia del sistema, a proposito.
+      Una fuente que no carga en un aula sin conexion deja la interfaz
+      ilegible. Lo que importa a cuatro metros son los tamaños, y esos estan
+      en Resources\Styles\Estilos.xaml.
+
+  Nada por debajo de 20 puntos, y areas tactiles grandes.
+      La pantalla mide 86 pulgadas y el ultimo alumno esta a cuatro metros. Un
+      boton pequeño significa que el profesor lo intenta tres veces delante de
+      treinta alumnos.
+
+
+Lo que esta declarado y todavia sin hacer
+-----------------------------------------
+
+Las dos pestañas lo dicen en pantalla, sin letra pequeña:
+
+  Cursos SCORM       El visor esta resuelto, porque es el mismo componente de
+                     navegacion. Lo que falta no es tecnico: SCORM registra
+                     tiempo y calificacion por su cuenta, y en AVACOM eso
+                     pertenece al LMS. Hasta que ese punto no se cierre, un
+                     curso SCORM podria generar un expediente academico
+                     paralelo al del nodo, y eso es peor que no tenerlo.
+
+  Contenido propio   Falta el editor. La separacion respecto al contenido
+                     oficial ya esta hecha y es lo importante: permite ver de
+                     un vistazo que esta revisado y que no, y deja el camino
+                     abierto para promover material del profesor al catalogo
+                     oficial pasando por el mismo empaquetado y la misma firma.
+
+Ademas, las preguntas del manifiesto guardan la respuesta correcta pero no las
+opciones. Para las actividades de preescolar, que son de tocar una imagen entre
+tres, hace falta que el equipo de contenido defina esas opciones en el formato.
+Mientras tanto el visor de actividades pide la respuesta escrita, que funciona
+y comprueba bien, pero no es la interaccion final.
+
+
+Si algo falla
+-------------
+
+  El restore falla por una version de paquete
+      Las versiones del csproj usan comodines. Si aun asi falla, resolver la
+      ultima con:   dotnet add package <nombre>
+
+  Falta una carga de trabajo
+      dotnet workload install maui
+
+  Las pruebas de compatibilidad de cifrado fallan
+      Es el fallo mas importante y casi siempre es la serializacion canonica
+      del JSON. Tiene que coincidir byte a byte con la del empaquetador:
+      claves ordenadas por orden de bytes y sin espacios. Ver Canonico.cs.
+
+  Un medio falla con error de autenticacion al abrirlo
+      Casi seguro es la etiqueta con la que se deriva su clave. Es el nombre
+      del archivo EN CLARO, sin el .enc, porque el .enc se le añade despues al
+      guardarlo. La regla vive en un solo sitio, ResolutorDeMedios.Etiqueta, y
+      hay una prueba que la fija.
+
+  Un video se corta a la mitad
+      Comprobar que el flujo se queda con su PROPIA copia de la clave del
+      paquete. El gestor cierra manifiestos cuando pasa de cuatro abiertos y al
+      cerrarlos borra la clave con ceros; si el flujo compartiera esa
+      referencia, la reproduccion moriria en cuanto se abriera un quinto
+      paquete. Ver StreamDeMedio.
+
+  El componente dice que no hay licencia para un paquete
+      La licencia se emite para un equipo concreto. Si se regeneraron las
+      claves del equipo, hay que volver a emitirla:  preparar-trabajo.ps1
+
+  SQLite da un error de entrada y salida
+      Casi siempre es una unidad de red. SQLite necesita bloqueo de archivos.
+      Trabajar en un disco local.
+
+
+Sobre las claves que vienen aqui
+--------------------------------
+
+Las claves de paquetes\claves son DE DESARROLLO y solo sirven para probar. La
+clave privada del emisor real firma todo el catalogo de AVACOM y no sale de
+donde esta: no se copia a un portatil, no entra en el control de versiones y no
+viaja en un correo. Cuando este componente pase a produccion, el paso de firmar
+ocurre en un solo sitio controlado y lo que se distribuye es el resultado.

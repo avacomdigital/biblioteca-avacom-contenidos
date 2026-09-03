@@ -1,0 +1,39 @@
+﻿PLANTILLA DE CURSO · copiala y cambiala
+=======================================
+
+1. Copia esta carpeta entera dentro de la ruta que le toque:
+
+       contenido\<PAIS>\<nivel>\<grado>\<materia>\
+
+   Por ejemplo:
+
+       contenido\CO\secundaria\09\humanidades\
+       contenido\CO\preescolar\transicion\exploracion\
+       contenido\MX\primaria\04\matematicas\
+
+   El pais en mayusculas y de dos letras. El grado con dos cifras.
+
+2. Rellena curso.txt e indice.txt. Los dos tienen dentro las
+   instrucciones.
+
+3. Crea una carpeta por cada tema, con su codigo delante:
+
+       DBA-9-01 Nombre del tema\
+
+4. Mete el material dentro, numerado en el orden en que se ha de dar:
+
+       01-Titulo de la lamina.png
+       02-Titulo del documento.pdf
+       03-Titulo del juego\        (una carpeta con index.html)
+       99-evaluacion.txt
+
+   El numero manda el orden. El resto del nombre es el titulo que
+   vera el profesor. La extension decide el tipo, tu no eliges nada.
+
+5. Antes de darlo por terminado, revisalo:
+
+       py -3 avacom_recolector.py revisar "contenido\CO\secundaria\09\humanidades"
+
+   Te dice en castellano que falta y que conviene arreglar.
+
+Todo lo demas esta en ESTANDAR-CONTENIDO.txt

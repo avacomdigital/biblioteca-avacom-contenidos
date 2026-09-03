@@ -1,0 +1,3 @@
+﻿Aqui van los archivos que la aplicacion necesita leer tal cual, sin procesar.
+Ahora mismo no hay ninguno: el contenido educativo NO vive aqui, vive en los
+paquetes firmados y cifrados. Esa separacion es el punto entero del diseño.

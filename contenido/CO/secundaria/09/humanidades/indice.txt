@@ -1,0 +1,10 @@
+﻿# El indice curricular, con sangria. Se parece al documento que ya tienen.
+#   tipo | codigo | nombre
+# La sangria dice de quien cuelga cada cosa.
+
+area | L115-A7 | Humanidades, lengua castellana e idiomas extranjeros
+  factor | EBC-CIT | Comprension e interpretacion textual
+  factor | EBC-LIT | Literatura
+    estandar | EBC-9-LIT-01 | Determino en las obras literarias latinoamericanas los elementos que dan cuenta de sus caracteristicas esteticas e historicas
+      tema | DBA-9-03 | El Romanticismo en la novela colombiana
+      tema | DBA-9-04 | El Modernismo y la renovacion del lenguaje poetico

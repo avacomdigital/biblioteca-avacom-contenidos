@@ -1,0 +1,29 @@
+﻿# ------------------------------------------------------------------
+# INDICE CURRICULAR
+#
+# Es el documento que ya tienen, escrito con sangria.
+#
+#     tipo | codigo | nombre
+#
+# La SANGRIA dice de quien cuelga cada cosa.
+# El TIPO es el nombre real del nivel en el marco curricular de tu
+# area. No lo inventes: si el documento del ministerio dice "factor",
+# escribe factor.
+# El CODIGO es el oficial. Puede ir vacio, pero es lo que permite que
+# un supervisor reconozca de que se esta hablando.
+#
+# Las carpetas de tema llevan ese mismo codigo delante del nombre, y
+# asi es como el material se cuelga del sitio correcto.
+# ------------------------------------------------------------------
+
+area | L115-A7 | Nombre del area segun la ley
+  factor | EBC-XXX | Nombre del eje, factor o pensamiento
+    estandar | EBC-9-XXX-01 | El estandar completo, tal cual
+      tema | DBA-9-01 | El primer tema
+      tema | DBA-9-02 | El segundo tema
+
+# Ejemplos reales de cadenas que NO son iguales entre si, y esta bien:
+#
+#   Preescolar    proposito -> actividad_rectora -> experiencia -> aprendizaje
+#   Matematicas   area -> pensamiento -> estandar -> tema
+#   Lenguaje      area -> factor -> estandar -> tema

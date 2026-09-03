@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="456" height="456" viewBox="0 0 456 456" xmlns="http://www.w3.org/2000/svg">
+  <rect width="456" height="456" fill="#E9EDF3"/>
+  <!-- La A de AVACOM, dibujada como trazo y no como texto: un icono con
+       tipografia depende de que la fuente exista al construirlo. -->
+  <path d="M228 96 L336 344 L288 344 L264 288 L192 288 L168 344 L120 344 Z
+           M228 176 L204 244 L252 244 Z"
+        fill="#E5262B"/>
+</svg>

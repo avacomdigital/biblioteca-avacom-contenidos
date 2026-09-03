@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+  <!-- Marca -->
+  <Color x:Key="Rojo">#E5262B</Color>
+  <Color x:Key="RojoOscuro">#C1191D</Color>   <!-- DEC-029: el rojo del texto pequeño -->
+
+  <!-- Superficie. Es un gris papel, no blanco: en una pantalla de 86 pulgadas
+       el blanco puro a plena luz deslumbra y cansa en una clase de cincuenta
+       minutos. -->
+  <Color x:Key="Papel">#E9EDF3</Color>
+  <Color x:Key="PapelHundido">#E3E7EE</Color>
+  <Color x:Key="SombraOscura">#C2C9D6</Color>
+  <Color x:Key="SombraClara">#FFFFFF</Color>
+
+  <Color x:Key="Tinta">#1D1D1F</Color>
+  <Color x:Key="TintaSuave">#6E6E73</Color>
+  <Color x:Key="Borde">#D6DCE6</Color>
+
+  <Color x:Key="Verde">#1F8A4C</Color>
+  <Color x:Key="Ambar">#B8720A</Color>
+
+</ResourceDictionary>

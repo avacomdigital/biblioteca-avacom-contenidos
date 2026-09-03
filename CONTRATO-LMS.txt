@@ -1,0 +1,306 @@
+AVACOM · contrato entre el LMS y el componente de contenido
+===========================================================
+
+Para el equipo que construye el LMS. No hace falta leer el codigo del
+componente: todo lo que sigue es lo unico que hay que saber, y es lo unico que
+se compromete a no cambiar.
+
+
+La idea en un parrafo
+---------------------
+
+En el equipo maestro del aula corren dos aplicaciones. El LMS lleva alumnos,
+grupos, examenes y calificaciones. El componente de contenido guarda el material
+educativo cifrado y sabe mostrarlo. El LMS le pregunta que hay y le pide que
+muestre algo; nunca abre un archivo por su cuenta ni toca su base de datos.
+
+
+Por que no se lee la base de datos directamente
+-----------------------------------------------
+
+Seria mas facil abrir indice.db y consultar. Y seria un error que se paga a los
+seis meses, por dos motivos:
+
+  El LMS quedaria atado al esquema interno del componente. Renombrar una columna
+  alli romperia el LMS aqui, y ninguno de los dos equipos sabria por que hasta
+  que un aula se quedara sin catalogo un lunes por la mañana.
+
+  El indice es una proyeccion reconstruible. Mientras se reconstruye esta a
+  medias. Un lector externo veria un catalogo incompleto y lo creeria bueno.
+
+Con esta API, el contrato es la forma del JSON, no la forma de las tablas. Los
+dos equipos publican versiones sin coordinarse.
+
+
+Como encontrar el componente
+----------------------------
+
+El componente escucha en un puerto que elige el sistema, distinto en cada
+arranque. Al arrancar deja una nota aqui:
+
+    %ProgramData%\AVACOM\contenido\enlace.json
+
+    {
+      "Contrato": 1,
+      "Puerto":   51234,
+      "Ficha":    "9f3c...64 caracteres hexadecimales",
+      "Proceso":  8412
+    }
+
+  Contrato   Version de este contrato. COMPROBARLA. Si no es un numero que el
+             LMS entienda, negarse a hablar y decirlo, en vez de intentarlo y
+             fallar de forma rara mas adelante.
+
+  Puerto     A donde llamar. Siempre 127.0.0.1.
+
+  Ficha      Va en la cabecera X-Avacom-Ficha de CADA peticion. Sin ella la
+             respuesta es 401 y nada mas.
+
+  Proceso    Identificador del proceso, por si hace falta comprobar que sigue
+             vivo.
+
+Si el archivo no existe, el componente no esta corriendo. Es un estado NORMAL,
+no un error: el LMS tiene que saber funcionar sin contenido instalado, porque un
+aula recien montada esta exactamente asi. Mostrar "no hay contenido" y seguir.
+
+
+Los cinco puntos de enlace
+--------------------------
+
+Todo con la cabecera:   X-Avacom-Ficha: <la ficha del enlace>
+Todas las respuestas:   application/json; charset=utf-8
+
+
+  GET /v1/salud
+
+      {"componente":"avacom-contenido","contrato":1,
+       "elementos":10,"paquetes":2,"politicas":0,
+       "huella_catalogo":"9f3c1a2b4d5e6f70"}
+
+      Para comprobar que esta vivo y que habla el mismo contrato.
+
+      huella_catalogo   Resume lo que el LMS veria AHORA si pidiera el catalogo.
+                        Mientras no cambie, el catalogo no ha cambiado. En
+                        cuanto cambie, hay que volver a pedirlo.
+
+      COMO SE USA, Y POR QUE IMPORTA
+
+      La regla 3 dice que el LMS no guarda un catalogo propio. Sin una señal de
+      cambio eso obliga a elegir entre recargar el catalogo entero cada pocos
+      segundos, que es caro, o cachearlo y quedarse desactualizado, que es peor:
+      el profesor acaba ofreciendo a la clase un material que el administrador
+      retiro hace diez minutos.
+
+      La huella resuelve las dos cosas. Se pide /v1/salud, que son doscientos
+      bytes, cada pocos segundos; solo se recarga el catalogo cuando cambia:
+
+          var salud = await http.GetFromJsonAsync<Salud>("/v1/salud");
+          if (salud.huella_catalogo != _ultimaHuella)
+          {
+              _ultimaHuella = salud.huella_catalogo;
+              await RecargarCatalogo();          // y refrescar lo que se este mostrando
+          }
+
+      QUE LA HACE CAMBIAR
+
+      Cualquier cosa que altere lo que el LMS puede ver:
+
+        · retirar o instalar un paquete
+        · desactivar o volver a habilitar por politica (asignatura, nivel,
+          grado, paquete, taxonomia o elemento)
+        · publicar una version nueva de un elemento
+
+      Desactivar por politica NO desinstala nada, y aun asi cambia la huella,
+      porque cambia lo que el LMS ve. Es lo que importa.
+
+      QUE NO LA HACE CAMBIAR
+
+      Consultar. Mostrar material. Registrar uso. La huella describe el estado
+      del catalogo, no cuenta cuantas veces se toco: si se desactiva una
+      asignatura y despues se vuelve a habilitar, la huella regresa al valor que
+      tenia antes. El LMS solo la compara por igualdad; no hay que interpretarla
+      ni asumir que crece.
+
+      NO ES UN CONTADOR DE VERSION. Son dieciseis caracteres derivados del
+      catalogo. Compararla es lo unico que se puede hacer con ella.
+
+      SOBRE LA CACHE, EN GENERAL
+
+      Todas las respuestas de esta API van con Cache-Control: no-store, y hay
+      una prueba que lo fija. Si el LMS mete una capa intermedia que cachee, la
+      huella no lo salva: mostrara material retirado igual. La cache que valga
+      la pena es la del propio LMS, en memoria, invalidada con esta huella.
+
+
+  GET /v1/catalogo
+  GET /v1/catalogo?nivel=secundaria&grado=8&asignatura=Matematicas&tipo=video
+  GET /v1/catalogo?taxonomia_ref=co-sec-mat-var
+
+      {"elementos":[
+        {"ref":"el-vid",
+         "tipo":"video",
+         "titulo":"Que significa la pendiente",
+         "nivel":"secundaria",
+         "grado":"8",
+         "asignatura":"Matematicas",
+         "idioma":"es",
+         "taxonomia_ref":"co-sec-mat-var",
+         "version":"1",
+         "duracion_seg":30,
+         "paquete":"co-sec-8-mat",
+         "huella":"bbb.mp4"}
+      ]}
+
+      Los cinco filtros son opcionales y se combinan entre si. Sin filtros
+      devuelve todo lo disponible.
+
+      tipo puede ser: leccion, video, audio, imagen, documento, interactivo,
+      actividad, evaluacion.
+
+
+  GET /v1/taxonomia
+  GET /v1/taxonomia?padre=co-sec-mat
+
+      {"nodos":[
+        {"ref":"co-sec-mat","padre":null,"tipo":"area","codigo":"MAT",
+         "nombre":"Matematicas","orden":1,"pais":"CO","nivel":"secundaria"}
+      ]}
+
+      Sin padre devuelve la raiz. Con padre, sus hijos. Asi se recorre el arbol
+      de arriba abajo sin saber de antemano cuantos niveles tiene, que es lo
+      importante y esta explicado mas abajo.
+
+
+  GET /v1/elemento/{ref}
+
+      El mismo objeto del catalogo, para una referencia concreta.
+
+      404  no esta instalado
+      403  esta instalado pero la escuela lo desactivo
+
+
+  POST /v1/mostrar        {"elemento_ref":"el-vid"}
+
+      {"aceptado":true}
+      {"aceptado":false,"motivo":"Ese material no esta instalado en este equipo."}
+
+      Pide que el material aparezca en la pantalla. La respuesta llega en cuanto
+      se acepta, NO cuando el material termina de cargarse: un video de
+      trescientos megabytes tarda, y dejar al LMS esperando por eso lo
+      bloquearia sin motivo.
+
+      El campo motivo esta escrito para que se le pueda enseñar a una persona
+      tal cual.
+
+
+La taxonomia no tiene una forma fija, y es a proposito
+------------------------------------------------------
+
+Es lo que mas sorprende al principio, asi que conviene entenderlo antes de
+diseñar la pantalla del LMS.
+
+La estructura curricular la define el CONTENIDO, no el LMS ni este componente.
+Y cambia por pais y por nivel:
+
+  Preescolar de Colombia    proposito -> actividad rectora -> experiencia ->
+                            aprendizaje.  Y no hay asignaturas.
+
+  Secundaria de Colombia    area -> pensamiento -> estandar -> tema.
+
+Las dos cadenas son incompatibles entre si, y ese es justo el punto: mañana
+entra Mexico con otra, y no se toca ni una linea de codigo.
+
+Consecuencias practicas para el LMS:
+
+  · NO asumir cuantos niveles tiene el arbol. Se recorre con /v1/taxonomia
+    hasta que un padre no devuelve hijos.
+
+  · NO asumir que existe asignatura. En preescolar viene vacia.
+
+  · El campo tipo de cada nodo ("proposito", "area", "pensamiento") sirve para
+    poner una etiqueta en pantalla, no para decidir logica. Si el LMS empieza a
+    comparar contra la cadena "area", ha atado el pais dentro del codigo.
+
+  · Para colgar contenido de una unidad del LMS, guardar taxonomia_ref y
+    elemento_ref. Son estables entre versiones del paquete.
+
+
+Reglas que hay que respetar
+---------------------------
+
+1. GUARDAR ref MAS version, NUNCA el titulo.
+
+   Cuando el LMS asocie un material a una unidad, guardar elemento_ref y
+   version. El titulo cambia entre versiones del paquete; la referencia no.
+
+2. LO QUE NO LLEGA, NO EXISTE.
+
+   El catalogo ya viene filtrado por la politica del administrador de la
+   escuela. Lo desactivado no llega atenuado ni con una marca: simplemente no
+   esta. El LMS no debe intentar mostrarlo de otra forma, porque si pudiera
+   verlo acabaria enseñandolo.
+
+3. NO SE GUARDA UN CATALOGO PROPIO.
+
+   Se pregunta cuando haga falta. Si el LMS cachea, que sea por minutos y con
+   /v1/salud para saber si algo cambio. Un catalogo copiado se convierte en un
+   segundo catalogo que hay que mantener sincronizado a mano, y siempre acaba
+   mintiendo.
+
+4. NO SE ABRE UN ARCHIVO POR LA CUENTA DEL LMS.
+
+   Por eso la respuesta no dice donde vive el paquete en disco. El material
+   esta cifrado y solo el componente tiene la clave; ademas es el unico sitio
+   donde se comprueba la politica antes de entregar nada.
+
+5. SIN CONTENIDO SE SIGUE FUNCIONANDO.
+
+   Un aula puede tener el LMS y ningun paquete instalado todavia. Es normal.
+
+
+Lo que el LMS NO puede hacer, y por que
+---------------------------------------
+
+No hay punto de enlace para instalar, desinstalar ni cambiar politicas. Eso es
+del administrador y se hace en la aplicacion del componente.
+
+El motivo no es desconfianza: es que instalar un paquete implica verificar su
+firma, comprobar la licencia del equipo y proyectar el indice. Si eso se
+pudiera disparar desde fuera, tarde o temprano se dispararia a mitad de una
+clase, y el catalogo cambiaria debajo de los pies del profesor.
+
+
+Cuando cambie este contrato
+---------------------------
+
+El numero de version sube cuando cambia la forma de una respuesta de manera que
+rompa a quien ya la lee. Añadir un campo nuevo NO rompe a nadie y no sube la
+version: el LMS debe ignorar los campos que no conozca.
+
+Los nombres de campo de este documento estan fijados por las pruebas del
+componente (ApiLocalTests). Si alguien los cambia, esas pruebas fallan, y el
+arreglo es subir la version del contrato, no tocar la prueba para que vuelva a
+pasar.
+
+
+Ejemplo completo
+----------------
+
+    // 1. encontrar el componente
+    var nota = JsonSerializer.Deserialize<Nota>(
+        File.ReadAllText(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            "AVACOM", "contenido", "enlace.json")));
+
+    if (nota is null) { /* no hay contenido instalado: seguir sin el */ }
+    if (nota.Contrato != 1) { /* version que no entendemos: avisar y parar */ }
+
+    var http = new HttpClient { BaseAddress = new Uri($"http://127.0.0.1:{nota.Puerto}") };
+    http.DefaultRequestHeaders.Add("X-Avacom-Ficha", nota.Ficha);
+
+    // 2. que hay para grado 8 de matematicas
+    var catalogo = await http.GetFromJsonAsync<Catalogo>(
+        "/v1/catalogo?nivel=secundaria&grado=8&asignatura=Matematicas");
+
+    // 3. el profesor elige uno y se muestra en la pantalla
+    await http.PostAsJsonAsync("/v1/mostrar", new { elemento_ref = "el-vid" });

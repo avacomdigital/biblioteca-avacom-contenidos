@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avacom.Biblioteca.App.Vistas.PropioPage"
+             Title="Contenido propio">
+
+  <ScrollView>
+    <VerticalStackLayout Padding="40" Spacing="32">
+
+      <VerticalStackLayout Spacing="6">
+        <Label Text="CONTENIDO PROPIO" Style="{StaticResource Etiqueta}" />
+        <Label Text="Lo que hace el profesor" Style="{StaticResource Titulo}" />
+      </VerticalStackLayout>
+
+      <Border Style="{StaticResource Tarjeta}">
+        <VerticalStackLayout Spacing="20">
+          <Label Text="Este apartado esta declarado y todavia sin editor."
+                 FontSize="26" FontAttributes="Bold" />
+          <Label Style="{StaticResource Subtitulo}"
+                 Text="Esta separado del contenido AVACOM a proposito, y no por comodidad de la interfaz. Un material del profesor todavia no ha pasado por revision, y mezclarlo con el catalogo oficial haria imposible saber de un vistazo que esta terminado y que no." />
+          <Label Style="{StaticResource Subtitulo}"
+                 Text="Al vivir aparte, un material propio se puede exportar, revisar, y si vale la pena, promover al catalogo oficial pasando por el mismo empaquetado y la misma firma que el resto. Ese camino solo existe si la separacion se mantiene desde el principio." />
+        </VerticalStackLayout>
+      </Border>
+
+      <Border Style="{StaticResource TarjetaHundida}">
+        <VerticalStackLayout Spacing="14">
+          <Label Text="LO QUE VA A HACER" Style="{StaticResource Etiqueta}" />
+          <Label Text="· Armar una leccion con material propio y material del catalogo." />
+          <Label Text="· Guardarla como paquete, con la misma estructura que usa el equipo de contenido." />
+          <Label Text="· Exportarla para llevarla a otra aula o mandarla a revision." />
+        </VerticalStackLayout>
+      </Border>
+
+    </VerticalStackLayout>
+  </ScrollView>
+</ContentPage>

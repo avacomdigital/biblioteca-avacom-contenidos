@@ -1,0 +1,11 @@
+bin/
+obj/
+*.user
+.vs/
+.idea/
+trabajo/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+claves/

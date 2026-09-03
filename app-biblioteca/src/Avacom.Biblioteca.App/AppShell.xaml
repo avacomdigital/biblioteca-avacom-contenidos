@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell x:Class="Avacom.Biblioteca.App.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:v="clr-namespace:Avacom.Biblioteca.App.Vistas"
+       Title="AVACOM Biblioteca"
+       FlyoutBehavior="Disabled">
+
+  <!-- Los tres apartados que pidio el producto, mas administracion. El de
+       contenido propio queda declarado y sin editor: el editor llega mas
+       adelante y hasta entonces la pantalla dice exactamente eso. -->
+
+  <TabBar>
+    <ShellContent Title="Contenido AVACOM"
+                  ContentTemplate="{DataTemplate v:CatalogoPage}" Route="catalogo" />
+
+    <ShellContent Title="Cursos SCORM"
+                  ContentTemplate="{DataTemplate v:ScormPage}" Route="scorm" />
+
+    <ShellContent Title="Contenido propio"
+                  ContentTemplate="{DataTemplate v:PropioPage}" Route="propio" />
+
+    <ShellContent Title="Administracion"
+                  ContentTemplate="{DataTemplate v:AdministracionPage}" Route="admin" />
+  </TabBar>
+</Shell>

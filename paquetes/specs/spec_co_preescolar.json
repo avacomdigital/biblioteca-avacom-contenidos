@@ -1,0 +1,212 @@
+{
+  "paquete": {
+    "clave_paquete": "co-preescolar-transicion-exploracion",
+    "version": "1",
+    "pais": "CO",
+    "nivel_clave": "preescolar",
+    "grado": "transicion",
+    "asignatura": "Exploración del medio",
+    "idioma": "es",
+    "titulo": "Exploración del medio · Transición",
+    "descripcion": "Bases Curriculares para la Educación Inicial y Preescolar. Propósito 3, actividad rectora exploración del medio.",
+    "emisor": "AVACOM"
+  },
+  "medios_origen": "../materiales",
+  "taxonomia": [
+    {
+      "taxonomia_ref": "co-pre-p3",
+      "padre_ref": null,
+      "tipo_nodo": "proposito",
+      "nombre": "Las niñas y los niños disfrutan aprender; exploran y se relacionan con el mundo para comprenderlo y construirlo",
+      "orden": 3,
+      "codigo": "P3",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-em",
+      "padre_ref": "co-pre-p3",
+      "tipo_nodo": "actividad_rectora",
+      "nombre": "Exploración del medio",
+      "orden": 1,
+      "codigo": "AR-EM",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-em-seres",
+      "padre_ref": "co-pre-p3-em",
+      "tipo_nodo": "experiencia",
+      "nombre": "Seres vivos de mi entorno",
+      "orden": 1,
+      "codigo": null,
+      "objetivo": "Reconoce características de los seres vivos que lo rodean"
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-em-habitat",
+      "padre_ref": "co-pre-p3-em",
+      "tipo_nodo": "experiencia",
+      "nombre": "Dónde viven los animales",
+      "orden": 2,
+      "codigo": null,
+      "objetivo": "Establece relaciones entre los animales y el lugar donde viven"
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-em-habitat-dba",
+      "padre_ref": "co-pre-p3-em-habitat",
+      "tipo_nodo": "aprendizaje",
+      "nombre": "Agrupa animales según dónde viven",
+      "orden": 1,
+      "codigo": "DBA-T-08",
+      "objetivo": "Identifica y agrupa objetos y seres a partir de un criterio"
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-juego",
+      "padre_ref": "co-pre-p3",
+      "tipo_nodo": "actividad_rectora",
+      "nombre": "Juego",
+      "orden": 2,
+      "codigo": "AR-JU",
+      "objetivo": null
+    },
+    {
+      "taxonomia_ref": "co-pre-p3-juego-clasif",
+      "padre_ref": "co-pre-p3-juego",
+      "tipo_nodo": "experiencia",
+      "nombre": "Juegos de clasificar",
+      "orden": 1,
+      "codigo": null,
+      "objetivo": "Clasifica objetos por un atributo"
+    }
+  ],
+  "elementos": [
+    {
+      "elemento_ref": "co-pre-em-lam-granja",
+      "tipo": "imagen",
+      "titulo": "Lámina de la granja",
+      "taxonomia_ref": "co-pre-p3-em-seres",
+      "descripcion": "Ilustración a página completa, legible a cuatro metros",
+      "accesibilidad": {
+        "descripcion_alterna": true,
+        "lectura_en_voz": true
+      },
+      "archivo": "lamina-granja.png"
+    },
+    {
+      "elemento_ref": "co-pre-em-lam-bosque",
+      "tipo": "imagen",
+      "titulo": "Lámina del bosque",
+      "taxonomia_ref": "co-pre-p3-em-seres",
+      "accesibilidad": {
+        "descripcion_alterna": true,
+        "lectura_en_voz": true
+      },
+      "archivo": "lamina-bosque.png"
+    },
+    {
+      "elemento_ref": "co-pre-em-video-sonidos",
+      "tipo": "video",
+      "titulo": "Sonidos de los animales",
+      "taxonomia_ref": "co-pre-p3-em-seres",
+      "duracion_seg": 95,
+      "accesibilidad": {
+        "subtitulos": false,
+        "lectura_en_voz": true
+      },
+      "archivo": "sonidos-animales.mp4"
+    },
+    {
+      "elemento_ref": "co-pre-em-act-donde-vive",
+      "tipo": "actividad",
+      "titulo": "¿Dónde vive cada animal?",
+      "taxonomia_ref": "co-pre-p3-em-habitat-dba",
+      "descripcion": "Tres opciones por vista, sin texto escrito, con instrucción en voz",
+      "accesibilidad": {
+        "lectura_en_voz": true,
+        "sin_texto": true
+      },
+      "preguntas": [
+        {
+          "pregunta_ref": "co-pre-q-vaca",
+          "tipo": "opcion_imagen",
+          "enunciado": "¿Dónde vive la vaca?",
+          "clave_respuesta": "granja",
+          "peso": 1,
+          "dificultad": "baja",
+          "retroalimentacion": "La vaca vive en la granja"
+        },
+        {
+          "pregunta_ref": "co-pre-q-oso",
+          "tipo": "opcion_imagen",
+          "enunciado": "¿Dónde vive el oso?",
+          "clave_respuesta": "bosque",
+          "peso": 1,
+          "dificultad": "baja",
+          "retroalimentacion": "El oso vive en el bosque"
+        },
+        {
+          "pregunta_ref": "co-pre-q-pez",
+          "tipo": "opcion_imagen",
+          "enunciado": "¿Dónde vive el pez?",
+          "clave_respuesta": "rio",
+          "peso": 1,
+          "dificultad": "baja",
+          "retroalimentacion": "El pez vive en el agua"
+        }
+      ]
+    },
+    {
+      "elemento_ref": "co-pre-em-lec-animales",
+      "tipo": "leccion",
+      "titulo": "Los animales y dónde viven",
+      "taxonomia_ref": "co-pre-p3-em-habitat",
+      "descripcion": "Secuencia de una sesión de treinta minutos",
+      "secuencia": [
+        {
+          "item_ref": "co-pre-em-lam-granja",
+          "nota": "Se proyecta y se conversa"
+        },
+        {
+          "item_ref": "co-pre-em-lam-bosque",
+          "nota": "Se compara con la anterior"
+        },
+        {
+          "item_ref": "co-pre-em-video-sonidos",
+          "nota": "Se escucha y se adivina"
+        },
+        {
+          "item_ref": "co-pre-em-act-donde-vive",
+          "nota": "Cierre de la sesión"
+        }
+      ]
+    }
+  ],
+  "voz": [
+    {
+      "voz_ref": "co-pre-v-1",
+      "elemento_ref": "co-pre-em-act-donde-vive",
+      "idioma": "es",
+      "texto": "Toca el lugar donde vive cada animal",
+      "archivo": "voz-1.wav"
+    },
+    {
+      "voz_ref": "co-pre-v-2",
+      "pregunta_ref": "co-pre-q-vaca",
+      "idioma": "es",
+      "texto": "¿Dónde vive la vaca?",
+      "archivo": "voz-2.wav"
+    },
+    {
+      "voz_ref": "co-pre-v-3",
+      "pregunta_ref": "co-pre-q-oso",
+      "idioma": "es",
+      "texto": "¿Dónde vive el oso?",
+      "archivo": "voz-3.wav"
+    },
+    {
+      "voz_ref": "co-pre-v-4",
+      "pregunta_ref": "co-pre-q-pez",
+      "idioma": "es",
+      "texto": "¿Dónde vive el pez?",
+      "archivo": "voz-4.wav"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+# Compilacion
+bin/
+obj/
+*.user
+.vs/
+.idea/
+
+# Carpeta de trabajo: paquetes publicados, licencia y claves de un equipo
+# concreto. Es material de prueba y no tiene nada que hacer en el repositorio.
+trabajo/
+
+# Claves del emisor. La privada firma el catalogo entero: no se sube nunca,
+# ni siquiera a un repositorio privado.
+paquetes/claves/
+
+# Paquetes construidos
+paquetes/ejemplo/
+
+# Bases de datos y sus archivos de apoyo
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Metadatos que dejan algunos gestores de archivos
+.DS_Store
+Thumbs.db
+desktop.ini
+
+__pycache__/
+*.pyc

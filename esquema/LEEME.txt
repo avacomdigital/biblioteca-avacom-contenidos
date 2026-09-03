@@ -1,0 +1,63 @@
+﻿Esquema del componente de contenido
+===================================
+
+Un solo archivo: contenido.sql
+
+Ocho tablas y tres vistas. Es todo lo que este componente escribe en disco.
+No depende de ninguna otra base de datos, y esa es la parte importante.
+
+No hay que ejecutarlo a mano. La aplicacion lo aplica sola la primera vez que
+se le indica una carpeta de trabajo (EstadoDelNodo.AsegurarEsquema).
+
+
+Que hay dentro
+--------------
+
+  m04_paquete_instalado    que paquetes hay en este equipo
+  m04_indice_elemento      proyeccion del catalogo
+  m04_indice_taxonomia     proyeccion de la estructura curricular
+  m04_indice_estado        antiguedad de la proyeccion
+  m04_politica             lo que el administrador desactivo
+  m04_referencia_usada     que se uso de verdad, aunque el paquete ya no este
+  m08_repaso_sesion        sesion de consulta libre
+  m08_repaso_consumo       que material se abrio y cuanto tiempo
+
+Los prefijos m04 y m08 vienen de la numeracion de modulos del producto. Se
+conservan para que las referencias entre el componente y el LMS sigan
+coincidiendo, aunque cada uno tenga su base.
+
+
+Lo que NO hay, y por que
+------------------------
+
+No hay personas, ni grupos, ni matriculas, ni intentos, ni calificaciones. Eso
+es del LMS, tiene su propio esquema y lo lleva otro equipo.
+
+La unica costura entre los dos es la columna persona_id de m08_repaso_sesion,
+y ADMITE NULO a proposito:
+
+  · Esta biblioteca es abierta. Alguien puede sentarse en la pantalla y
+    consultar material sin identificarse. En preescolar directamente no hay
+    con que identificarse.
+
+  · Si el componente exigiera una persona, no podria funcionar solo, que es
+    justo lo que tiene que poder hacer.
+
+  · Si ademas declarara la clave foranea hacia la tabla de personas, habria
+    que crear el esquema entero del LMS solo para poder crear estas ocho
+    tablas. Es lo que pasaba antes: 1876 lineas y 92 tablas ajenas
+    arrastradas por una sola clave foranea.
+
+Cuando el LMS esta presente, escribe su identificador en esa columna y la
+relacion se resuelve del lado del LMS, que es quien es dueño de esa tabla.
+
+
+El esquema del manifiesto no esta aqui
+--------------------------------------
+
+El manifiesto que va dentro de cada paquete tiene su propio esquema (tablas
+p_paquete, p_taxonomia, p_elemento, p_pregunta, p_voz y demas), y vive donde se
+crea: en avacom_empaquetador.py, en la constante ESQUEMA.
+
+Es a proposito. Tenerlo en dos sitios garantiza que un dia dejen de coincidir,
+y el sintoma seria un paquete que se construye bien y no se puede abrir.

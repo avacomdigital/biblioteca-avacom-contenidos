@@ -1,0 +1,142 @@
+﻿AVACOM · paquetes de contenido
+==============================
+
+Implementacion de referencia del contrato entre el producto de contenido y
+el producto LMS. Todo lo de esta carpeta se ejecuto y se verifico.
+
+Esto NO forma parte de la aplicacion. Es la herramienta con la que el equipo
+de contenido arma y firma los paquetes. En el aula no hay Python.
+
+La tuberia tiene tres etapas:
+
+    construir   ->   revisar   ->   publicar   ->   distribuir
+
+Construir arma el paquete en claro, para poder revisarlo. Publicar lo cifra,
+lo firma y emite la licencia del equipo destino. Un paquete
+publicado es ilegible sin la licencia de ese equipo.
+
+
+Arranque
+--------
+
+Lo normal es no correr nada de esto a mano: preparar-trabajo.ps1, en la raiz
+del proyecto, hace la tuberia entera. Esto es para cuando hay que entender que
+paso o cambiar un paso.
+
+    rem lo que hace falta instalar
+    py -3 -m pip install cryptography pillow reportlab
+
+    rem los medios de muestra, si no estan
+    py -3 generar_medios.py
+
+    rem una sola vez, para todo el equipo
+    py -3 avacom_empaquetador.py claves
+
+    rem construir los dos paquetes de ejemplo, en claro
+    py -3 avacom_empaquetador.py ejemplos C:\avacom\claro
+
+    rem el equipo del aula genera su par de claves al provisionarse
+    py -3 avacom_publicar.py nodo C:\avacom\nodoA
+
+    rem publicar: cifra y firma
+    py -3 avacom_publicar.py publicar C:\avacom\claro\avacom-co-secundaria-8-matematicas-v1 C:\avacom\pub
+
+    rem emitir la licencia con las claves de los paquetes que ese equipo tiene
+    py -3 avacom_publicar.py licencia C:\avacom\nodoA C:\avacom\lic C:\avacom\pub\avacom-co-secundaria-8-matematicas-v1
+
+    rem comprobar que ese equipo lo abre
+    py -3 avacom_publicar.py abrir C:\avacom\pub\avacom-co-secundaria-8-matematicas-v1 C:\avacom\lic\licencia.json C:\avacom\nodoA
+
+Nota: SQLite necesita bloqueo de archivos, asi que construye siempre en disco
+local y copia el resultado despues. En unidades de red falla.
+
+
+Archivos
+--------
+
+  avacom_empaquetador.py     equipo de contenido. Construye y verifica paquetes
+  avacom_publicar.py         cifra, firma y emite licencias por equipo
+  avacom_cripto.py           firma Ed25519, cifrado AES-256-GCM, envoltura X25519
+  generar_medios.py          material de muestra: laminas, documento, videos,
+                             interactivo y audios
+  prueba_paquete_ajeno.py    comprueba que un paquete copiado a otro equipo no
+                             abre, y que un bit cambiado se rechaza
+  specs\                     especificacion de los dos paquetes de ejemplo
+  materiales\                los medios de muestra ya generados
+  claves\                    el par del emisor. Se genera en la primera
+                             ejecucion. La privada NO se sube a ningun
+                             repositorio ni se copia a otra maquina
+
+
+Firma y cifrado no son lo mismo
+-------------------------------
+
+  FIRMA     demuestra que el paquete es autentico y que nadie lo altero.
+            No oculta nada. Ed25519.
+
+  CIFRADO   hace el contenido ilegible para quien no tenga la clave.
+            AES-256-GCM por bloques de 1 MB.
+
+Cadena de claves:
+
+  1. Cada paquete se cifra con una clave propia de 256 bits, K_pkg.
+  2. K_pkg no viaja dentro del paquete. Nunca.
+  3. K_pkg viaja dentro de la licencia, envuelta para un nodo concreto con
+     su clave publica X25519. Solo ese nodo la abre.
+  4. La licencia va firmada por AVACOM.
+
+Consecuencia: copiar la carpeta del paquete a una memoria USB no sirve de
+nada. Sin la licencia de ese nodo es ruido.
+
+Lo que esto no resuelve, y conviene decirlo: quien controle el equipo del
+aula mientras funciona puede llegar a la clave en memoria. El cifrado en
+reposo sube muchisimo el liston y no lo vuelve imposible. La defensa que lo
+acompana es el cifrado de disco y el arranque verificado del equipo.
+
+
+Por que se cifra tambien el manifiesto
+--------------------------------------
+
+El manifiesto lleva las claves de respuesta de todos los reactivos. En claro,
+un alumno con cinco minutos y una memoria USB delante de la pantalla se lleva
+las respuestas de todos los examenes del ano. El componente lo descifra en
+memoria y lo descarta al cerrar: nunca toca el disco.
+
+Lo unico legible sin licencia es la vitrina de formato.json: pais, nivel,
+grado, asignatura y numero de elementos. Sirve para que un tecnico sepa que
+tiene en la mano.
+
+
+Los dos ejemplos
+----------------
+
+Se eligieron los dos extremos del producto a proposito.
+
+Preescolar de Colombia, sobre las Bases Curriculares para la Educacion
+Inicial y Preescolar. Taxonomia de proposito, actividad rectora, experiencia
+y aprendizaje. Sin materias. Cuatro audios de instruccion hablada.
+Actividad de tres opciones sin texto escrito.
+
+Secundaria de Colombia, grado 8, sobre las areas obligatorias de la Ley 115
+articulo 23 y los Estandares Basicos de Competencias. Taxonomia de area,
+pensamiento, estandar y tema. Ocho reactivos, seis autocalificables y dos
+abiertos con rubrica de tres criterios.
+
+Las dos cadenas de tipos son incompatibles entre si, y eso es lo que
+demuestran: que la taxonomia pertenece al contenido y el LMS acepta la que
+le llegue.
+
+
+Comprobado
+----------
+
+  · Los dos paquetes se construyen, se cifran, se firman y se verifican.
+  · El componente los instala en un equipo real y proyecta su indice.
+  · Manipular el manifiesto se detecta y se rechaza.
+  · Manipular un archivo de medios se detecta y se rechaza.
+  · Manipular la licencia invalida su firma.
+  · Un equipo sin licencia para el paquete no obtiene la clave.
+  · Con clave equivocada el contenido es ilegible.
+  · Se puede leer un bloque suelto para adelantar un video.
+  · La politica del administrador filtra sin tocar el indice.
+  · Borrar el indice entero y reconstruirlo devuelve lo mismo.

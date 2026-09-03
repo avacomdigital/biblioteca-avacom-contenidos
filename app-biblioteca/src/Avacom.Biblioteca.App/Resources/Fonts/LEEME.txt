@@ -1,0 +1,3 @@
+﻿Vacio a proposito. La aplicacion usa la tipografia del sistema porque es la
+unica garantizada en el equipo maestro de cualquier pantalla. Si algun dia se
+adopta una tipografia de marca, el .ttf va aqui y se registra en MauiProgram.cs.
