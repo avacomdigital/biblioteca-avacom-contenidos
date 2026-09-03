@@ -71,7 +71,14 @@ ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0.17763
 
 OutputDir=dist
+; El instalador con contenido de demostracion se llama distinto A PROPOSITO.
+; Los dos archivos acaban en la misma carpeta y se parecen; si solo cambiara
+; lo de dentro, tarde o temprano alguien manda el equivocado a un colegio.
+#ifdef ConContenidoDemo
+OutputBaseFilename=AVACOM-Biblioteca-{#Version}-DEMO-con-contenido
+#else
 OutputBaseFilename=AVACOM-Biblioteca-{#Version}-setup
+#endif
 Compression=lzma2/max
 SolidCompression=yes
 
@@ -102,6 +109,39 @@ Source: "payload\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs creat
 ; carpeta falta el esquema, no haya que ir a buscarlo a otro equipo.
 Source: "..\esquema\contenido.sql"; DestDir: "{app}\esquema"; Flags: ignoreversion
 
+#ifdef ConContenidoDemo
+; ---------------------------------------------------------------------------
+; CARPETA DE TRABAJO DE DEMOSTRACION
+;
+; Sin una carpeta de trabajo (licencia, clave del nodo, esquema y paquetes) la
+; aplicacion instala pero no puede abrir nada, y OPS Master no ve ni un
+; elemento en el catalogo. Esto la trae hecha para poder demostrar el producto
+; de punta a punta sin provisionar nada.
+;
+; Lo que va aqui dentro incluye nodo\nodo_privada.bin, que es LA CLAVE PRIVADA
+; DEL NODO. En un equipo de aula de verdad esa clave se genera en la propia
+; maquina y no sale de ahi; aqui viaja dentro del .exe, y por eso este
+; instalador no es el que se entrega a un colegio.
+;
+; Va a ProgramData y no a Program Files para que un administrador pueda
+; reemplazar los paquetes despues sin pelearse con los permisos, y en un
+; subdirectorio propio (Biblioteca\) para no mezclarse con lo de OPS Master.
+; ---------------------------------------------------------------------------
+;
+; uninsneveruninstall NO es opcional aqui.
+;
+; Todo lo que se declara en [Files] lo borra Inno al desinstalar, por su cuenta
+; y antes de que corra una sola linea de [Code]. Sin este flag, la pregunta de
+; mas abajo ("quieres borrar la carpeta de trabajo?") no servia de nada: los
+; archivos ya no estaban cuando se hacia. Comprobado: se perdian la licencia y
+; los paquetes en cada desinstalacion, incluso respondiendo que no.
+;
+; Con el flag, Inno los deja quietos y quien decide es el codigo: pregunta si
+; hay alguien mirando, y conserva si la desinstalacion es silenciosa.
+Source: "..\trabajo\*"; DestDir: "{commonappdata}\AVACOM\Biblioteca\trabajo"; \
+    Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall
+#endif
+
 [Dirs]
 ; El punto de encuentro con AVACOM OPS Master.
 ;
@@ -112,6 +152,13 @@ Source: "..\esquema\contenido.sql"; DestDir: "{app}\esquema"; Flags: ignoreversi
 ; hay contenido instalado, sin ningun error visible que explicara por que.
 Name: "{commonappdata}\AVACOM"; Permissions: users-modify
 Name: "{commonappdata}\AVACOM\contenido"; Permissions: users-modify
+
+#ifdef ConContenidoDemo
+; Subdirectorio propio de Biblioteca dentro del territorio compartido. La
+; aplicacion solo LEE de aqui, pero se deja con permiso de modificacion para
+; que un administrador pueda reemplazar los paquetes sin elevar nada.
+Name: "{commonappdata}\AVACOM\Biblioteca"; Permissions: users-modify
+#endif
 
 [Icons]
 Name: "{group}\{#Nombre}"; Filename: "{app}\{#Ejecutable}"
@@ -244,6 +291,20 @@ procedure CurPageChanged(CurPageID: Integer);
 begin
   if CurPageID = PaginaValidacion.ID then
     InicializarValidacion();
+
+#ifdef ConContenidoDemo
+  // La ultima pantalla dice donde quedo la carpeta de trabajo. Sin ese dato el
+  // administrador tiene que adivinarlo, y la aplicacion no muestra ni un
+  // material hasta que se le indica.
+  if CurPageID = wpFinished then
+    WizardForm.FinishedLabel.Caption :=
+      WizardForm.FinishedLabel.Caption + #13#10#13#10 +
+      'Esta version trae contenido de demostracion.' + #13#10#13#10 +
+      'Al abrir la aplicacion, ve a Administracion, pega esta ruta y pulsa ' +
+      '"Usar esta ruta":' + #13#10#13#10 +
+      ExpandConstant('{commonappdata}\AVACOM\Biblioteca\trabajo') + #13#10#13#10 +
+      'Despues pulsa "Revisar e instalar" y entra a Contenido AVACOM.';
+#endif
 end;
 
 function NextButtonClick(CurPageID: Integer): Boolean;
@@ -278,8 +339,12 @@ begin
   // El indice del equipo NO se borra sin preguntar. Ahi esta el catalogo de lo
   // que el aula tiene instalado; perderlo por descuido obliga a reinstalar
   // todos los paquetes, y eso en un colegio es una manana de trabajo.
+  //
+  // EN MODO SILENCIOSO NO SE PREGUNTA Y NO SE BORRA. Con /SUPPRESSMSGBOXES un
+  // MB_YESNO se auto-responde que SI, asi que preguntar sin comprobar esto
+  // borraba los datos en toda desinstalacion automatizada. Comprobado: paso.
   DatosUsuario := ExpandConstant('{localappdata}\AVACOM\world.avacom.biblioteca');
-  if DirExists(DatosUsuario) then
+  if DirExists(DatosUsuario) and (not UninstallSilent()) then
   begin
     if MsgBox('Se desinstalo AVACOM Biblioteca.' + #13#10#13#10 +
               'En este equipo queda el indice del contenido instalado. Si vas a ' +
@@ -288,6 +353,20 @@ begin
               'Quieres borrarlo tambien?', mbConfirmation, MB_YESNO) = IDYES then
       DelTree(DatosUsuario, True, True, True);
   end;
+
+#ifdef ConContenidoDemo
+  // La carpeta de trabajo tampoco se borra sin preguntar: el administrador
+  // pudo haber reemplazado los paquetes de demostracion por los de verdad,
+  // y ahi dentro esta la clave privada de este nodo.
+  // Mismo motivo que arriba: en silencio se conserva.
+  if DirExists(ExpandConstant('{commonappdata}\AVACOM\Biblioteca')) and (not UninstallSilent()) then
+  begin
+    if MsgBox('Tambien quedo la carpeta de trabajo (licencia, claves de este ' +
+              'equipo y paquetes de contenido).' + #13#10#13#10 +
+              'Quieres borrarla?', mbConfirmation, MB_YESNO) = IDYES then
+      DelTree(ExpandConstant('{commonappdata}\AVACOM\Biblioteca'), True, True, True);
+  end;
+#endif
 
   // El punto de encuentro solo se retira si el otro producto ya no esta. Si
   // OPS Master sigue instalado y le quitamos la carpeta, su backend deja de

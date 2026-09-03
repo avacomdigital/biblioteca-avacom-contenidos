@@ -10,7 +10,21 @@
         winget install --id JRSoftware.InnoSetup
 #>
 
-param([switch]$SoloCompilar)
+<#
+    -ConContenidoDemo  mete dentro del instalador la carpeta trabajo\ del repo:
+                       esquema, licencia, CLAVE PRIVADA DEL NODO y los paquetes
+                       de ejemplo. Sirve para demostrar el producto sin tener
+                       que provisionar nada.
+
+                       NO se usa para lo que se entrega a un colegio. La clave
+                       privada del nodo iria dentro del .exe, y cualquiera que
+                       lo tuviera podria descifrar esos paquetes: el modelo de
+                       una licencia por equipo dejaria de existir.
+
+                       Por eso hay que pedirlo a mano. Sin el interruptor sale
+                       un instalador limpio, solo con la aplicacion.
+#>
+param([switch]$SoloCompilar, [switch]$ConContenidoDemo)
 
 $ErrorActionPreference = "Stop"
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -75,7 +89,22 @@ Write-Host "2 - compilando el instalador"
 $dist = Join-Path $Aqui "dist"
 New-Item -ItemType Directory -Path $dist -Force | Out-Null
 
-& $iscc "/Q" (Join-Path $Aqui "avacom-biblioteca.iss")
+$definiciones = @()
+if ($ConContenidoDemo) {
+    $trabajo = Join-Path $Raiz "trabajo"
+    if (-not (Test-Path (Join-Path $trabajo "lic\licencia.json"))) {
+        throw "No hay carpeta trabajo\ preparada. Generala antes con: .\preparar-trabajo.ps1"
+    }
+
+    Write-Host ""
+    Write-Host "   AVISO: este instalador llevara dentro la clave privada del nodo" -ForegroundColor Yellow
+    Write-Host "   y los paquetes de ejemplo. Es para demostrar el producto." -ForegroundColor Yellow
+    Write-Host "   No se entrega a un colegio." -ForegroundColor Yellow
+
+    $definiciones += "/DConContenidoDemo"
+}
+
+& $iscc "/Q" @definiciones (Join-Path $Aqui "avacom-biblioteca.iss")
 if ($LASTEXITCODE -ne 0) { throw "fallo la compilacion del instalador" }
 
 Write-Host ""
