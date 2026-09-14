@@ -1,0 +1,1238 @@
+<title>Formato de curso AVACOM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400;500&display=swap">
+
+<style>
+/* ============================================================
+   AVACOM · Formato de curso
+   Dirección visual: minimalismo editorial, soft UI muy sutil,
+   glassmorphism ligero, mucho espacio negativo.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+
+  /* base */
+  --cielo:   #ECF5F8;
+  --niebla:  #D4E7EE;
+  --marfil:  #FAF8E7;
+
+  --tinta:   #18181B;
+  --suave:   #71717A;
+  --tenue:   #9A9AA3;
+  --linea:   rgba(24,24,27,0.10);
+  --linea-f: rgba(24,24,27,0.16);
+
+  /* superficies flotantes */
+  --vidrio:      rgba(255,255,255,0.55);
+  --vidrio-alto: rgba(255,255,255,0.72);
+  --brillo:      rgba(255,255,255,0.85);
+
+  /* profundidad: nunca negro, siempre azul apagado */
+  --sombra-1: 0 1px 2px rgba(28,58,74,0.04), 0 6px 16px rgba(28,58,74,0.05);
+  --sombra-2: 0 1px 2px rgba(28,58,74,0.05), 0 14px 38px rgba(28,58,74,0.08);
+  --sombra-3: 0 2px 4px rgba(28,58,74,0.05), 0 28px 64px rgba(28,58,74,0.10);
+  --relieve:  inset 0 1px 0 rgba(255,255,255,0.9);
+
+  /* acentos por diapositiva */
+  --acento: #2C6E8A;
+  --acento-tenue: rgba(44,110,138,0.10);
+
+  --azul:    #2C6E8A;
+  --mar:     #3F7D6E;
+  --indigo:  #5B6BA8;
+  --oliva:   #6E7A52;
+  --ocre:    #8A6A3B;
+  --rojo:    #A14E4E;
+  --ambar:   #9A7B3A;
+
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-weight:300;
+  color:var(--tinta);
+  background-color:var(--cielo);
+  background-image:
+    radial-gradient(900px 620px at 12% 8%,  rgba(255,255,255,0.90), rgba(255,255,255,0) 62%),
+    radial-gradient(760px 540px at 88% 22%, rgba(255,255,255,0.62), rgba(255,255,255,0) 60%),
+    radial-gradient(1100px 700px at 62% 96%, rgba(255,255,255,0.55), rgba(255,255,255,0) 64%),
+    linear-gradient(128deg, #ECF5F8 0%, #D4E7EE 49%, #FAF8E7 100%);
+  background-attachment: fixed;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------------------------------------------------- estructura */
+
+.deck{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.slide{
+  display:none;
+  flex:1;
+  padding-block: clamp(76px, 9vh, 116px) clamp(96px, 12vh, 132px);
+  padding-inline: clamp(20px, 5vw, 76px);
+}
+.slide.is-active{display:block}
+
+.lienzo{
+  max-width:1180px;
+  margin-inline:auto;
+  width:100%;
+}
+
+/* Entrada suave al cambiar de diapositiva. La primera se pinta ya en reposo:
+   así el primer fotograma de la página está completo. */
+.deck.mover .is-active .sube{animation: sube .62s cubic-bezier(.22,.61,.36,1) both}
+.deck.mover .is-active .sube:nth-child(2){animation-delay:.05s}
+.deck.mover .is-active .sube:nth-child(3){animation-delay:.10s}
+@keyframes sube{
+  from{opacity:.001; transform:translateY(14px)}
+  to{opacity:1; transform:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .deck.mover .is-active .sube{animation:none}
+  *{scroll-behavior:auto !important}
+}
+
+/* ---------------------------------------------------- tipografía */
+
+.eyebrow{
+  font-size:.72rem;
+  font-weight:500;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--suave);
+  margin:0 0 clamp(20px,3vh,34px);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.eyebrow::before{
+  content:"";
+  width:26px;
+  height:1px;
+  background:var(--acento);
+  flex:none;
+}
+
+h1, h2{
+  font-weight:400;
+  font-size:clamp(3rem, 6vw, 7rem);
+  line-height:.92;
+  letter-spacing:-.06em;
+  margin:0;
+  max-width:16ch;
+  text-wrap:balance;
+}
+h1 em, h2 em{
+  font-style:normal;
+  font-weight:300;
+  color:var(--acento);
+}
+
+.bajada{
+  font-size:clamp(1.02rem, 1.35vw, 1.22rem);
+  line-height:1.62;
+  color:var(--suave);
+  max-width:46ch;
+  margin:clamp(22px,3vh,32px) 0 0;
+}
+.bajada strong{font-weight:500; color:var(--tinta)}
+
+h3{
+  font-size:.74rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--suave);
+  margin:0 0 18px;
+}
+
+p{margin:0}
+
+/* ------------------------------------------------ rejilla base */
+
+.par{
+  display:grid;
+  grid-template-columns: minmax(0,1.02fr) minmax(0,1.24fr);
+  gap: clamp(30px, 4.4vw, 78px);
+  align-items:start;
+}
+.par > .derecha{padding-top: clamp(0px, 5vh, 62px)}
+
+@media (max-width: 900px){
+  .par{grid-template-columns:1fr; gap:clamp(28px,5vh,40px)}
+  .par > .derecha{padding-top:0}
+}
+
+/* ------------------------------------------------ superficies */
+
+.panel{
+  background:var(--vidrio);
+  backdrop-filter: blur(22px) saturate(1.25);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  border:1px solid var(--brillo);
+  border-radius:20px;
+  box-shadow: var(--sombra-2), var(--relieve);
+  padding: clamp(22px, 2.6vw, 34px);
+}
+.panel.alto{background:var(--vidrio-alto); box-shadow: var(--sombra-3), var(--relieve)}
+
+/* notas flotantes: sin borde, solo aire y una fina línea */
+.notas{display:flex; flex-direction:column; gap:clamp(20px,2.6vh,30px)}
+.nota{
+  padding-left:20px;
+  border-left:1px solid var(--linea);
+  font-size:.97rem;
+  line-height:1.6;
+  color:var(--suave);
+  transition: border-color .3s ease, transform .3s ease;
+}
+.nota:hover{border-left-color:var(--acento); transform:translateX(2px)}
+.nota b{display:block; font-weight:500; color:var(--tinta); margin-bottom:5px; font-size:.99rem}
+
+/* cita */
+.cita{
+  margin-top:clamp(28px,4vh,44px);
+  padding:clamp(20px,2.4vw,30px) clamp(22px,2.6vw,34px);
+  background:linear-gradient(140deg, rgba(255,255,255,.78), rgba(255,255,255,.42));
+  border:1px solid var(--brillo);
+  border-radius:18px;
+  box-shadow:var(--sombra-1), var(--relieve);
+}
+.cita q{
+  display:block;
+  quotes:none;
+  font-size:clamp(1.14rem,1.7vw,1.44rem);
+  font-weight:300;
+  line-height:1.38;
+  letter-spacing:-.02em;
+}
+.cita q::before, .cita q::after{content:""}
+.cita small{
+  display:block;
+  margin-top:12px;
+  font-size:.88rem;
+  line-height:1.58;
+  color:var(--suave);
+}
+
+/* ------------------------------------------------ lista de piezas */
+
+.piezas{display:grid; gap:0}
+.pieza{
+  display:grid;
+  grid-template-columns: 1fr minmax(0,1.55fr);
+  gap:clamp(14px,2.4vw,34px);
+  padding:clamp(15px,2vh,21px) 4px;
+  border-top:1px solid var(--linea);
+  align-items:baseline;
+  transition:background .3s ease, padding-left .3s ease;
+  border-radius:10px;
+}
+.pieza:last-child{border-bottom:1px solid var(--linea)}
+.pieza:hover{background:rgba(255,255,255,.44); padding-left:12px}
+.pieza dt{font-weight:500; font-size:1.01rem; letter-spacing:-.01em}
+.pieza dt span{
+  display:block;
+  font-family:var(--mono);
+  font-weight:400;
+  font-size:.78rem;
+  color:var(--acento);
+  margin-top:4px;
+  letter-spacing:0;
+}
+.pieza dd{margin:0; font-size:.94rem; line-height:1.58; color:var(--suave)}
+
+@media (max-width:560px){
+  .pieza{grid-template-columns:1fr; gap:6px}
+}
+
+/* ------------------------------------------------ árbol */
+
+.arbol{
+  font-family:var(--mono);
+  font-weight:300;
+  font-size:clamp(.69rem,.93vw,.83rem);
+  line-height:1.92;
+  margin:0;
+  white-space:pre;
+  overflow-x:auto;
+  color:var(--tinta);
+  tab-size:2;
+}
+.arbol .c{color:var(--tenue)}
+.arbol .k{color:var(--acento); font-weight:400}
+.arbol .f{color:var(--tinta); font-weight:400}
+
+.leyenda{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px}
+.chip-info{
+  font-family:var(--mono);
+  font-size:.72rem;
+  font-weight:400;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.62);
+  border:1px solid var(--brillo);
+  box-shadow:var(--sombra-1);
+  color:var(--suave);
+}
+.chip-info b{color:var(--acento); font-weight:500}
+
+/* ------------------------------------------------ pestañas */
+
+.pestanas{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px}
+.pest{
+  font-family:var(--mono);
+  font-size:.79rem;
+  font-weight:400;
+  padding:9px 15px;
+  border-radius:999px;
+  border:1px solid var(--linea);
+  background:rgba(255,255,255,.44);
+  color:var(--suave);
+  cursor:pointer;
+  transition:all .24s ease;
+  box-shadow:var(--relieve);
+}
+.pest:hover{background:rgba(255,255,255,.76); color:var(--tinta)}
+.pest[aria-selected="true"]{
+  background:#fff;
+  color:var(--acento);
+  border-color:rgba(44,110,138,.30);
+  box-shadow:var(--sombra-1), var(--relieve);
+  font-weight:500;
+}
+
+.hoja[hidden]{display:none}
+.hoja p.que{font-size:.97rem; line-height:1.62; color:var(--suave); margin-bottom:18px; max-width:52ch}
+.hoja p.que b{color:var(--tinta); font-weight:500}
+
+pre.codigo{
+  font-family:var(--mono);
+  font-weight:300;
+  font-size:clamp(.71rem,.92vw,.82rem);
+  line-height:1.82;
+  margin:0;
+  padding:clamp(18px,2.2vw,26px);
+  background:rgba(255,255,255,.62);
+  border:1px solid var(--brillo);
+  border-radius:16px;
+  box-shadow:var(--sombra-1), var(--relieve);
+  overflow-x:auto;
+  white-space:pre;
+}
+pre.codigo .k{color:var(--acento); font-weight:400}
+pre.codigo .c{color:var(--tenue)}
+
+/* ------------------------------------------------ flujo */
+
+.flujo{display:flex; flex-direction:column; gap:14px}
+.carril{
+  display:flex;
+  align-items:stretch;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.paso{
+  flex:1 1 150px;
+  min-width:0;
+  padding:18px 18px 16px;
+  border-radius:16px;
+  background:rgba(255,255,255,.58);
+  border:1px solid var(--brillo);
+  box-shadow:var(--sombra-1), var(--relieve);
+}
+.paso.destacado{
+  background:linear-gradient(150deg, rgba(255,255,255,.92), rgba(255,255,255,.60));
+  box-shadow:var(--sombra-2), var(--relieve);
+}
+.paso b{display:block; font-weight:500; font-size:.96rem; letter-spacing:-.01em}
+.paso span{display:block; margin-top:7px; font-size:.84rem; line-height:1.5; color:var(--suave)}
+.paso em{
+  font-style:normal;
+  display:block;
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:.7rem;
+  color:var(--acento);
+}
+.quien{
+  display:flex; justify-content:space-between; gap:16px;
+  font-size:.72rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tenue);
+  padding:0 4px;
+}
+.vuelta{
+  font-family:var(--mono);
+  font-size:.76rem;
+  color:var(--suave);
+  padding:10px 16px;
+  border-left:1px solid var(--acento);
+  background:rgba(255,255,255,.34);
+  border-radius:0 12px 12px 0;
+}
+
+/* ------------------------------------------------ reglas */
+
+.reglas{display:grid; gap:0}
+.regla{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:clamp(14px,2vw,26px);
+  padding:clamp(15px,2vh,20px) 4px;
+  border-top:1px solid var(--linea);
+  border-radius:10px;
+  transition:background .3s ease, padding-left .3s ease;
+}
+.regla:last-child{border-bottom:1px solid var(--linea)}
+.regla:hover{background:rgba(255,255,255,.44); padding-left:12px}
+.regla .n{
+  font-family:var(--mono);
+  font-size:.74rem;
+  font-weight:400;
+  color:var(--acento);
+  padding-top:4px;
+  font-variant-numeric:tabular-nums;
+}
+.regla b{font-weight:500; font-size:1rem; line-height:1.42; letter-spacing:-.012em; display:block}
+.regla span{display:block; margin-top:6px; font-size:.9rem; line-height:1.56; color:var(--suave)}
+.regla code{
+  font-family:var(--mono);
+  font-size:.86em;
+  font-weight:400;
+  color:var(--tinta);
+  background:rgba(255,255,255,.66);
+  padding:1px 6px;
+  border-radius:5px;
+  border:1px solid var(--linea);
+}
+
+/* ------------------------------------------------ errores */
+
+.filtros{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:clamp(20px,3vh,28px)}
+.filtro{
+  font-size:.82rem;
+  font-weight:400;
+  padding:9px 16px;
+  border-radius:999px;
+  border:1px solid var(--linea);
+  background:rgba(255,255,255,.44);
+  color:var(--suave);
+  cursor:pointer;
+  transition:all .24s ease;
+  box-shadow:var(--relieve);
+  display:inline-flex; align-items:center; gap:9px;
+}
+.filtro:hover{background:rgba(255,255,255,.78); color:var(--tinta)}
+.filtro[aria-pressed="true"]{
+  background:#fff; color:var(--tinta); font-weight:500;
+  border-color:var(--linea-f);
+  box-shadow:var(--sombra-1), var(--relieve);
+}
+.filtro .cuenta{
+  font-family:var(--mono); font-size:.72rem; color:var(--tenue);
+  font-variant-numeric:tabular-nums;
+}
+.filtro .punto{width:7px; height:7px; border-radius:50%; flex:none}
+.p-bloquea{background:var(--rojo)}
+.p-aviso{background:var(--ambar)}
+.p-nadie{background:var(--indigo)}
+
+.errores{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(288px,1fr));
+  gap:0 clamp(24px,3vw,44px);
+  max-height:min(52vh, 460px);
+  overflow-y:auto;
+  padding-right:6px;
+  scrollbar-width:thin;
+}
+.err{
+  padding:15px 2px 15px 0;
+  border-top:1px solid var(--linea);
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:13px;
+  align-items:start;
+}
+.err[hidden]{display:none}
+.err .punto{margin-top:8px}
+.err b{font-weight:500; font-size:.95rem; line-height:1.44; display:block; letter-spacing:-.01em}
+.err span{display:block; margin-top:5px; font-size:.87rem; line-height:1.52; color:var(--suave)}
+.err code{
+  font-family:var(--mono); font-size:.85em; font-weight:400;
+  background:rgba(255,255,255,.66); padding:1px 5px; border-radius:5px;
+  border:1px solid var(--linea); color:var(--tinta);
+}
+.vacio{font-size:.92rem; color:var(--suave); padding:20px 0}
+
+/* ------------------------------------------------ cierre */
+
+.lista-fin{display:grid; gap:0; margin-top:6px}
+.lista-fin li{
+  list-style:none;
+  padding:13px 4px 13px 32px;
+  border-top:1px solid var(--linea);
+  font-size:.96rem;
+  line-height:1.5;
+  position:relative;
+}
+.lista-fin li:last-child{border-bottom:1px solid var(--linea)}
+.lista-fin li::before{
+  content:"";
+  position:absolute; left:6px; top:21px;
+  width:9px; height:9px; border-radius:3px;
+  border:1px solid var(--acento);
+  background:var(--acento-tenue);
+}
+.lista-fin small{display:block; color:var(--suave); font-size:.86rem; margin-top:4px; line-height:1.5}
+
+/* ------------------------------------------------ navegación */
+
+.riel{
+  position:fixed; top:0; left:0; right:0; z-index:40;
+  display:flex; gap:2px;
+  padding:0;
+  background:rgba(255,255,255,.22);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.seg{
+  flex:1;
+  height:3px;
+  border:0;
+  padding:0;
+  background:rgba(24,24,27,.07);
+  cursor:pointer;
+  transition:background .3s ease, height .2s ease;
+}
+.seg:hover{background:rgba(24,24,27,.22); height:5px}
+.seg.hecho{background:rgba(24,24,27,.20)}
+.seg.ahora{background:var(--acento); height:5px}
+.seg:focus-visible{outline:2px solid var(--acento); outline-offset:2px}
+
+.barra{
+  position:fixed; z-index:40;
+  left:0; right:0; bottom:0;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  padding: 14px clamp(16px,5vw,40px) calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(to top, rgba(236,245,248,.94), rgba(236,245,248,0));
+  pointer-events:none;
+}
+.barra > *{pointer-events:auto}
+
+.contador{
+  font-family:var(--mono);
+  font-size:.76rem;
+  color:var(--suave);
+  font-variant-numeric:tabular-nums;
+  display:flex; align-items:center; gap:10px;
+  min-width:0;
+}
+.contador .titulillo{
+  color:var(--tenue);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+@media (max-width:620px){ .contador .titulillo{display:none} }
+
+.mandos{display:flex; gap:9px; align-items:center}
+.boton{
+  width:42px; height:42px;
+  border-radius:50%;
+  border:1px solid var(--brillo);
+  background:rgba(255,255,255,.66);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--sombra-1), var(--relieve);
+  color:var(--tinta);
+  cursor:pointer;
+  display:grid; place-items:center;
+  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+  font-size:1rem;
+  line-height:1;
+}
+.boton:hover:not(:disabled){transform:translateY(-1px); box-shadow:var(--sombra-2), var(--relieve)}
+.boton:active:not(:disabled){transform:translateY(0); box-shadow:inset 0 2px 6px rgba(28,58,74,.10)}
+.boton:disabled{opacity:.32; cursor:default}
+.boton:focus-visible{outline:2px solid var(--acento); outline-offset:3px}
+.boton.texto{
+  width:auto; height:38px; border-radius:999px; padding:0 17px;
+  font-family:inherit; font-size:.8rem; font-weight:400; color:var(--suave);
+}
+.boton.texto:hover{color:var(--tinta)}
+
+.pista{
+  position:fixed; z-index:39;
+  bottom:calc(76px + env(safe-area-inset-bottom)); right:clamp(16px,5vw,40px);
+  font-size:.76rem; color:var(--tenue);
+  display:flex; align-items:center; gap:7px;
+  transition:opacity .5s ease;
+}
+.pista kbd{
+  font-family:var(--mono); font-size:.7rem;
+  border:1px solid var(--linea); border-radius:5px;
+  padding:2px 6px; background:rgba(255,255,255,.6);
+  box-shadow:var(--relieve);
+}
+.pista.fuera{opacity:0; pointer-events:none}
+@media (max-width:620px){ .pista{display:none} }
+
+/* ------------------------------------------------ impresión */
+
+@media print{
+  body{background:#fff}
+  .riel, .barra, .pista{display:none}
+  .slide{display:block !important; break-after:page; padding:24px 0}
+  .panel, .cita, pre.codigo, .paso{box-shadow:none; background:#fff; border-color:#ddd}
+  .errores{max-height:none; overflow:visible}
+  .hoja[hidden]{display:block}
+}
+</style>
+
+<div class="deck">
+
+  <nav class="riel" id="riel" aria-label="Diapositivas"></nav>
+
+  <!-- ══════════════════════════════════════════════ 1 · portada -->
+  <section class="slide is-active" data-titulo="Portada" style="--acento:#2C6E8A;--acento-tenue:rgba(44,110,138,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">AVACOM Biblioteca · Equipo de contenido</p>
+          <h1 class="sube">Formato de un <em>curso</em></h1>
+          <p class="bajada sube">Cómo se crea un curso, qué lleva dentro y qué revisa la herramienta antes de aceptarlo. Sin escribir código.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="cita" style="margin-top:0">
+            <q>La estructura de carpetas es el formato.</q>
+            <small>Se trabaja con carpetas y archivos de texto, como ya se trabaja. Un programa deduce el resto y produce el paquete que se instala en el aula.</small>
+          </div>
+          <div class="leyenda">
+            <span class="chip-info">11 diapositivas</span>
+            <span class="chip-info">Corre dentro de <b>Avacom Contenido</b></span>
+            <span class="chip-info">Fuente: <b>specs/05-resumen-formato-curso.md</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 2 · resumen -->
+  <section class="slide" data-titulo="Resumen" style="--acento:#3F7D6E;--acento-tenue:rgba(63,125,110,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Resumen</p>
+          <h2 class="sube">Un curso es una <em>carpeta</em></h2>
+          <p class="bajada sube">No hay que escribir código ni JSON. La estructura de carpetas y dos archivos de texto son el formato.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="notas">
+            <div class="nota"><b>La herramienta lo recorre todo</b>Deduce el tipo de cada material por su extensión y cuelga cada tema del índice curricular.</div>
+            <div class="nota"><b>Y produce un paquete</b>Cifrado y firmado. Se instala entero en el equipo del aula, y desde ahí lo abren la Biblioteca y el LMS.</div>
+            <div class="nota"><b>Nada viaja en claro</b>La revisión pedagógica final ocurre antes de cifrar. Después, el contenido solo se abre en un aula con licencia.</div>
+          </div>
+          <div class="cita">
+            <q>Para el aula, un curso es un paquete instalado.</q>
+            <small>Su referencia estable es la clave del paquete, que se forma sola con país, nivel, grado y materia. Nunca cambia al republicar. Lo que sube es la versión.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 3 · piezas -->
+  <section class="slide" data-titulo="Las piezas" style="--acento:#5B6BA8;--acento-tenue:rgba(91,107,168,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Las piezas</p>
+          <h2 class="sube">Seis piezas, ni una <em>más</em></h2>
+          <p class="bajada sube">País, nivel y grado no se escriben en ningún archivo: salen de la ruta. Un dato escrito dos veces acaba contradiciéndose.</p>
+        </div>
+        <div class="derecha sube">
+          <dl class="piezas">
+            <div class="pieza">
+              <dt>La ruta<span>contenido\PAÍS\nivel\grado\materia</span></dt>
+              <dd>País de dos letras, nivel entre preescolar, primaria, secundaria y media, grado de dos cifras.</dd>
+            </div>
+            <div class="pieza">
+              <dt>La ficha<span>curso.txt</span></dt>
+              <dd>Título, materia, idioma, versión y descripción. Una línea por dato.</dd>
+            </div>
+            <div class="pieza">
+              <dt>El índice curricular<span>indice.txt</span></dt>
+              <dd>El marco oficial escrito con sangría. Tipo, código y nombre separados por barras.</dd>
+            </div>
+            <div class="pieza">
+              <dt>Los temas<span>DBA-9-03 Romanticismo\</span></dt>
+              <dd>Una carpeta por tema, con su código del índice delante del nombre.</dd>
+            </div>
+            <div class="pieza">
+              <dt>Los materiales<span>01-Título.extensión</span></dt>
+              <dd>Láminas, PDF, videos, audios, lecciones, juegos, evaluaciones y bancos. Numerados en el orden en que se dan.</dd>
+            </div>
+            <div class="pieza">
+              <dt>La lección del tema<span>leccion.txt · opcional</span></dt>
+              <dd>Se genera sola con la secuencia de materiales. El archivo solo le pone título y descripción.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 4 · árbol -->
+  <section class="slide" data-titulo="Estructura de ejemplo" style="--acento:#2C6E8A;--acento-tenue:rgba(44,110,138,.10)">
+    <div class="lienzo">
+      <p class="eyebrow sube">Estructura de ejemplo</p>
+      <h2 class="sube" style="max-width:20ch">Así se ve un curso <em>completo</em></h2>
+      <div class="panel alto sube" style="margin-top:clamp(26px,3.6vh,40px)">
+<pre class="arbol">contenido\
+└── <span class="k">CO</span>\                                        <span class="c">país: dos letras en mayúsculas</span>
+    └── <span class="k">secundaria</span>\                            <span class="c">nivel</span>
+        └── <span class="k">09</span>\                                <span class="c">grado: dos cifras</span>
+            └── <span class="k">humanidades</span>\                   <span class="c">materia: una palabra, sin tildes</span>
+                ├── <span class="f">curso.txt</span>                  <span class="c">la ficha</span>
+                ├── <span class="f">indice.txt</span>                 <span class="c">el índice curricular</span>
+                │
+                ├── <span class="k">DBA-9-03 Romanticismo</span>\     <span class="c">código del índice + espacio + nombre</span>
+                │   ├── <span class="f">leccion.txt</span>            <span class="c">opcional</span>
+                │   ├── 01-Guía de lectura del Romanticismo.pdf
+                │   ├── 02-Línea de tiempo del Romanticismo.png
+                │   ├── <span class="k">03-Del Romanticismo al Modernismo</span>\   <span class="c">lección completa</span>
+                │   │   ├── <span class="f">guion.txt</span>          <span class="c">el texto de la lección</span>
+                │   │   ├── linea-tiempo.png       <span class="c">medios citados en el guion</span>
+                │   │   ├── valle.mp4
+                │   │   └── nocturno.wav
+                │   └── <span class="f">99-evaluacion.txt</span>
+                │
+                ├── <span class="k">DBA-9-04 Modernismo</span>\
+                │   ├── 01-Lectura en voz alta del Nocturno.wav
+                │   └── <span class="f">99-evaluacion.txt</span>
+                │
+                └── <span class="k">EBC-9-LIT-01 Sintesis</span>\     <span class="c">un tema puede colgar de un estándar</span>
+                    ├── <span class="k">01-Comparador de movimientos</span>\       <span class="c">juego o animación</span>
+                    │   ├── <span class="f">index.html</span>         <span class="c">punto de entrada, siempre este nombre</span>
+                    │   └── juego.js
+                    ├── <span class="f">02-evaluacion.txt</span>
+                    └── <span class="f">90-banco.txt</span>           <span class="c">alimenta el examen; no se da en clase</span></pre>
+      </div>
+      <div class="leyenda sube">
+        <span class="chip-info">El <b>número</b> manda el orden</span>
+        <span class="chip-info">La <b>extensión</b> decide el tipo</span>
+        <span class="chip-info">El <b>título</b> es la referencia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 5 · archivos -->
+  <section class="slide" data-titulo="Los archivos de texto" style="--acento:#6E7A52;--acento-tenue:rgba(110,122,82,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Los archivos de texto</p>
+          <h2 class="sube">Seis archivos, y se escriben a <em>mano</em></h2>
+          <p class="bajada sube">Se escriben como los escribiría un profesor. Las líneas que empiezan por almohadilla no se leen.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="pestanas" role="tablist" aria-label="Archivos de texto">
+            <button class="pest" role="tab" aria-selected="true"  data-hoja="h1">curso.txt</button>
+            <button class="pest" role="tab" aria-selected="false" data-hoja="h2">indice.txt</button>
+            <button class="pest" role="tab" aria-selected="false" data-hoja="h3">guion.txt</button>
+            <button class="pest" role="tab" aria-selected="false" data-hoja="h4">evaluacion.txt</button>
+            <button class="pest" role="tab" aria-selected="false" data-hoja="h5">banco.txt</button>
+            <button class="pest" role="tab" aria-selected="false" data-hoja="h6">leccion.txt</button>
+          </div>
+
+          <div class="hoja" id="h1" role="tabpanel">
+            <p class="que"><b>La ficha del curso.</b> Una línea por dato. País, nivel y grado no van aquí: salen de la ruta.</p>
+<pre class="codigo"><span class="k">titulo:</span> Literatura colombiana del siglo XIX
+<span class="k">materia:</span> Humanidades · Lengua Castellana
+<span class="k">idioma:</span> es
+<span class="k">version:</span> 1
+<span class="k">descripcion:</span> Romanticismo y Modernismo. Ley 115 artículo 23.</pre>
+          </div>
+
+          <div class="hoja" id="h2" role="tabpanel" hidden>
+            <p class="que"><b>El índice curricular.</b> La sangría dice de quién cuelga cada cosa. El tipo es el real del marco: si el ministerio dice «factor», se escribe factor.</p>
+<pre class="codigo"><span class="k">area</span> | L115-A7 | Humanidades, lengua castellana e idiomas
+  <span class="k">factor</span> | EBC-LIT | Literatura
+    <span class="k">estandar</span> | EBC-9-LIT-01 | Determino en las obras...
+      <span class="k">tema</span> | DBA-9-03 | El Romanticismo en la novela
+      <span class="k">tema</span> | DBA-9-04 | El Modernismo y el lenguaje poético</pre>
+          </div>
+
+          <div class="hoja" id="h3" role="tabpanel" hidden>
+            <p class="que"><b>La lección completa.</b> Ocho cosas y ninguna más. El asterisco marca la opción correcta del quiz, que no da nota.</p>
+<pre class="codigo"><span class="k">titulo:</span> Del Romanticismo al Modernismo
+<span class="k">objetivo:</span> Reconoce rasgos de los dos movimientos
+<span class="k">duracion:</span> 50
+
+<span class="k">##</span> Por dónde empezamos
+
+Un párrafo normal. Una línea en blanco empieza otro.
+
+<span class="k">&gt;</span> Una idea que hay que destacar.
+<span class="k">-</span> un punto de lista
+
+<span class="k">IMAGEN:</span> linea-tiempo.png | Los dos movimientos
+<span class="k">VIDEO:</span> valle.mp4 | El valle del Cauca
+
+<span class="k">QUIZ</span>
+<span class="k">P:</span> El paisaje en la novela romántica funciona como:
+<span class="k">-</span> decoración para ambientar la época
+<span class="k">-</span> espejo del ánimo de los personajes <span class="k">*</span>
+<span class="k">retro:</span> Llueve cuando el personaje sufre.</pre>
+          </div>
+
+          <div class="hoja" id="h4" role="tabpanel" hidden>
+            <p class="que"><b>La evaluación.</b> Sí da nota. Guarda la respuesta, no las opciones: el alumno escribe y el sistema compara.</p>
+<pre class="codigo"><span class="k">titulo:</span> Evaluación · Función lineal
+
+<span class="k">P:</span> ¿Cuál es la pendiente de la recta y = 3x - 5?
+<span class="k">R:</span> 3
+<span class="k">peso:</span> 1
+<span class="k">dificultad:</span> baja
+<span class="k">retro:</span> Es el número que multiplica a x.
+
+<span class="k">P:</span> Explica qué representa la pendiente en la vida diaria
+<span class="k">abierta</span>
+<span class="k">peso:</span> 2
+
+<span class="k">RUBRICA</span>
+Interpretación | La relaciona con una razón de cambio real | 2
+Argumentación | Justifica con lenguaje matemático | 1</pre>
+          </div>
+
+          <div class="hoja" id="h5" role="tabpanel" hidden>
+            <p class="que"><b>El banco de preguntas.</b> Igual que una evaluación, más una cabecera. No se da en clase: el examen saca de él y dos alumnos no ven lo mismo.</p>
+<pre class="codigo"><span class="k">titulo:</span> Banco · Función lineal
+<span class="k">extraer:</span> 4
+<span class="k">por_dificultad:</span> baja 1, media 2, alta 1
+
+<span class="k">P:</span> ¿En qué año se publicó María, de Jorge Isaacs?
+<span class="k">R:</span> 1867
+<span class="k">dificultad:</span> baja
+<span class="k">peso:</span> 1</pre>
+          </div>
+
+          <div class="hoja" id="h6" role="tabpanel" hidden>
+            <p class="que"><b>La secuencia del tema.</b> Opcional. Si no existe, la lección toma el nombre de la carpeta.</p>
+<pre class="codigo"><span class="k">titulo:</span> Función lineal y razón de cambio
+<span class="k">descripcion:</span> Una sesión de cincuenta minutos.</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 6 · flujo -->
+  <section class="slide" data-titulo="El flujo" style="--acento:#8A6A3B;--acento-tenue:rgba(138,106,59,.10)">
+    <div class="lienzo">
+      <p class="eyebrow sube">El flujo</p>
+      <h2 class="sube" style="max-width:18ch">Del texto al <em>aula</em></h2>
+      <div class="sube" style="margin-top:clamp(28px,4vh,44px)">
+        <div class="quien"><span>Equipo de contenido</span><span>Equipo técnico</span></div>
+        <div class="flujo" style="margin-top:12px">
+          <div class="carril">
+            <div class="paso destacado">
+              <b>Carpetas y texto</b>
+              <span>Copiar la plantilla, rellenar los dos archivos y meter el material numerado.</span>
+            </div>
+            <div class="paso destacado">
+              <b>Revisar</b>
+              <span>No toca nada. Dice en castellano qué falta. Se repite tantas veces como haga falta.</span>
+              <em>avacom_recolector.py revisar</em>
+            </div>
+            <div class="paso destacado">
+              <b>Armar</b>
+              <span>Genera la especificación y copia los medios. Solo cuando no queda ningún error.</span>
+              <em>avacom_recolector.py armar</em>
+            </div>
+            <div class="paso">
+              <b>Construir y verificar</b>
+              <span>Último momento en que se puede leer el contenido en claro. Ahí va la revisión pedagógica final.</span>
+            </div>
+            <div class="paso">
+              <b>Cifrar, firmar, licenciar</b>
+              <span>El paquete queda ilegible sin la licencia del equipo del aula.</span>
+            </div>
+          </div>
+          <div class="vuelta">revisar → corregir → revisar   ·   hasta que diga «Todo correcto. Listo para armar»</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 7 · reglas 1-5 -->
+  <section class="slide" data-titulo="Reglas 1 a 5" style="--acento:#46708C;--acento-tenue:rgba(70,112,140,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Lo más importante · 1 de 2</p>
+          <h2 class="sube">Cómo se nombra y dónde va <em>cada cosa</em></h2>
+          <p class="bajada sube">Estas cinco no son preferencias de estilo. Son las que decide la herramienta al leer la carpeta.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="reglas">
+            <div class="regla">
+              <span class="n">01</span>
+              <div>
+                <b>La extensión decide el tipo</b>
+                <span><code>.png .jpg .jpeg .webp .svg</code> imagen · <code>.pdf</code> documento · <code>.mp4 .webm</code> video · <code>.mp3 .wav .m4a</code> audio · carpeta con <code>index.html</code> interactivo · carpeta con <code>guion.txt</code> lección completa. Lo que no está en la lista se ignora.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">02</span>
+              <div>
+                <b>El nombre manda: <code>NN-Título.extensión</code></b>
+                <span>El número da el orden dentro de la lección del tema. Sin número, el material va al final. Conviene dejar huecos: 10, 20, 30.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">03</span>
+              <div>
+                <b>El título es la referencia, y es único en todo el curso</b>
+                <span>Dos títulos iguales dan la misma referencia y la herramienta no deja armar. Cambiar un título crea un material nuevo.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">04</span>
+              <div>
+                <b>La carpeta del tema empieza por un código de <code>indice.txt</code></b>
+                <span>Código, un espacio y luego el nombre. Así el material se cuelga del nodo correcto. Un nodo sin código no puede recibir material.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">05</span>
+              <div>
+                <b>País, nivel y grado salen de la ruta</b>
+                <span>Nunca se escriben en <code>curso.txt</code>. Un dato escrito dos veces acaba contradiciéndose y nadie sabe cuál vale.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 8 · reglas 6-10 -->
+  <section class="slide" data-titulo="Reglas 6 a 10" style="--acento:#3F7D6E;--acento-tenue:rgba(63,125,110,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Lo más importante · 2 de 2</p>
+          <h2 class="sube">Lo que se paga caro si se <em>rompe</em></h2>
+          <p class="bajada sube">Estas cinco no las detecta ninguna herramienta a tiempo. El error aparece en el aula o meses después.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="reglas">
+            <div class="regla">
+              <span class="n">06</span>
+              <div>
+                <b>La clave del paquete no cambia; la versión sube</b>
+                <span>Es lo que el LMS guarda en el expediente de cada alumno. Si cambia, el expediente deja de poder explicarse.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">07</span>
+              <div>
+                <b>Las evaluaciones guardan la respuesta, no las opciones</b>
+                <span>El alumno escribe y el sistema compara, sin distinguir mayúsculas ni espacios sobrantes. Respuestas cortas y sin ambigüedad: un número, una palabra, «falso».</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">08</span>
+              <div>
+                <b>Pregunta abierta, rúbrica obligatoria</b>
+                <span>Sin ella, dos profesores dan notas distintas al mismo texto y la familia reclama con razón.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">09</span>
+              <div>
+                <b>Nada de internet en los interactivos</b>
+                <span>El aula no tiene conexión. Una dirección <code>https://</code> deja la pantalla en blanco delante de treinta alumnos, sin ningún mensaje que lo explique.</span>
+              </div>
+            </div>
+            <div class="regla">
+              <span class="n">10</span>
+              <div>
+                <b>Se escribe para leerse a cuatro metros</b>
+                <span>Textos de 20 px o más, botones de 64 px, una idea por lámina y fondo gris papel. No es un detalle de diseño: es la condición del producto.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 9 · LMS -->
+  <section class="slide" data-titulo="Cómo lo ve el LMS" style="--acento:#5B6BA8;--acento-tenue:rgba(91,107,168,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Al otro lado</p>
+          <h2 class="sube">Cómo lo ve el <em>LMS</em></h2>
+          <p class="bajada sube">El LMS no lee archivos. Pide la lista de cursos y, por cada uno, sus secciones. Lo que ve depende de cómo esté escrito el índice.</p>
+        </div>
+        <div class="derecha sube">
+          <div class="notas">
+            <div class="nota"><b>Las secciones son el índice curricular</b>No una estructura inventada aparte. El código de cada sección es su nodo, y es estable entre versiones: es lo que permite que el progreso de un alumno sobreviva a una republicación.</div>
+            <div class="nota"><b>Una sección sin material no aparece</b>Y un curso sin nada visible tampoco se ofrece. Si la política de la escuela desactiva todo lo que trae, el curso desaparece de la lista: ofrecerlo vacío sería peor.</div>
+            <div class="nota"><b>El orden pedagógico vive en la lección del tema</b>Dentro de una sección, el LMS ordena los materiales por título. El orden que da el número del archivo se conserva en la lección del tema, no en la lista de la sección.</div>
+          </div>
+          <div class="cita">
+            <q>La taxonomía pertenece al contenido.</q>
+            <small>Preescolar usa propósito, actividad rectora, experiencia y aprendizaje. Matemáticas usa área, pensamiento, estándar y tema. Las dos cadenas son incompatibles entre sí, y está bien: el LMS acepta la que le llegue.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 10 · errores -->
+  <section class="slide" data-titulo="Errores que evitar" style="--acento:#A14E4E;--acento-tenue:rgba(161,78,78,.10)">
+    <div class="lienzo">
+      <p class="eyebrow sube">Errores</p>
+      <h2 class="sube" style="max-width:22ch">Lo que hay que <em>evitar</em></h2>
+      <div class="sube" style="margin-top:clamp(24px,3.4vh,36px)">
+        <div class="filtros" id="filtros">
+          <button class="filtro" aria-pressed="true"  data-f="todos"><span>Todos</span><span class="cuenta">31</span></button>
+          <button class="filtro" aria-pressed="false" data-f="bloquea"><span class="punto p-bloquea"></span><span>No deja armar</span><span class="cuenta">5</span></button>
+          <button class="filtro" aria-pressed="false" data-f="aviso"><span class="punto p-aviso"></span><span>Sale un aviso</span><span class="cuenta">19</span></button>
+          <button class="filtro" aria-pressed="false" data-f="nadie"><span class="punto p-nadie"></span><span>Nadie lo detecta</span><span class="cuenta">7</span></button>
+        </div>
+        <div class="errores" id="errores"></div>
+        <p class="vacio" id="vacio" hidden>No hay errores de ese tipo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ 11 · cierre -->
+  <section class="slide" data-titulo="Antes de entregar" style="--acento:#3F7D6E;--acento-tenue:rgba(63,125,110,.10)">
+    <div class="lienzo">
+      <div class="par">
+        <div>
+          <p class="eyebrow sube">Cierre</p>
+          <h2 class="sube">Antes de <em>entregar</em></h2>
+          <p class="bajada sube">La revisión debe terminar con <strong>«Todo correcto. Listo para armar»</strong>. Si dice «Se puede armar» con avisos, hay que leerlos uno a uno.</p>
+          <div class="cita sube">
+            <q>Un aviso ignorado hoy es un material que no se ve en el aula mañana.</q>
+          </div>
+        </div>
+        <div class="derecha sube">
+          <ul class="lista-fin">
+            <li>La ruta tiene la forma país, nivel, grado, materia.</li>
+            <li><code style="font-family:var(--mono);font-size:.86em">curso.txt</code> con título, materia y descripción.</li>
+            <li>El índice con los tipos reales del marco y los códigos oficiales.<small>Nadie comprueba que un código exista de verdad. La responsabilidad es de quien lo escribe.</small></li>
+            <li>Cada carpeta de tema empieza por un código que está en el índice.</li>
+            <li>Materiales numerados, títulos únicos y extensiones de la lista.</li>
+            <li>Cada pregunta tiene respuesta o la palabra «abierta», y hay rúbrica si hay abiertas.</li>
+            <li>Cada banco dice cuántas preguntas extrae y tiene al menos el doble.</li>
+            <li>Interactivos con punto de entrada, sin direcciones externas ni almacenamiento del navegador.</li>
+            <li>Videos de menos de 300 MB y derechos resueltos.<small>El sistema cifra y firma, pero no comprueba licencias de uso.</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="barra">
+    <div class="contador">
+      <span id="num">01 / 11</span>
+      <span class="titulillo" id="titulillo">Portada</span>
+    </div>
+    <div class="mandos">
+      <button class="boton texto" id="imprimir" type="button">Imprimir</button>
+      <button class="boton" id="atras" type="button" aria-label="Diapositiva anterior">←</button>
+      <button class="boton" id="siguiente" type="button" aria-label="Diapositiva siguiente">→</button>
+    </div>
+  </div>
+
+  <p class="pista" id="pista"><kbd>←</kbd><kbd>→</kbd> para moverse</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------------------------------------- los errores */
+  var ERRORES = [
+    ["bloquea","Carpeta del curso fuera de la ruta esperada","Tiene que colgar de <code>contenido\\PAÍS\\nivel\\grado\\materia</code>, con el país en dos letras y el nivel entre los cuatro válidos."],
+    ["bloquea","Falta <code>curso.txt</code>","Sin la ficha no hay curso. Copiar la plantilla y rellenarla."],
+    ["bloquea","Dos materiales con el mismo título","Aunque estén en temas distintos. «Lámina» no sirve; «Lámina de la célula animal» sí. Mayúsculas y tildes no cuentan para distinguir."],
+    ["bloquea","Dos títulos largos que coinciden en sus primeros 48 caracteres","La referencia se recorta ahí. Hay que diferenciar los títulos al principio, no al final."],
+    ["bloquea","Curso sin ninguna carpeta de tema o sin ningún material","Hace falta al menos un tema con un material reconocido."],
+
+    ["aviso","Falta <code>indice.txt</code>","Sin él no hay estructura curricular y todo cuelga de la raíz. Escribir el índice antes que los temas."],
+    ["aviso","Carpeta de tema cuyo código no está en el índice","El material cuelga del primer nodo. Copiar el código exacto del índice."],
+    ["aviso","Carpeta suelta en la raíz del curso","Una carpeta «borradores» o «fuentes» se trata como un tema. El material de trabajo va fuera de la carpeta del curso."],
+    ["aviso","Subcarpeta dentro de un tema sin punto de entrada ni guion","Se trata como un interactivo roto. Los medios sueltos van directamente en la carpeta del tema."],
+    ["aviso","Material <code>.docx</code>, <code>.pptx</code>, <code>.gif</code> u otra extensión no reconocida","Se ignora en silencio dentro del paquete. Hay que exportar a PDF o a un formato de la lista."],
+    ["aviso","Archivo <code>.txt</code> sin «evaluacion» ni «banco» en el nombre","Se ignora. Las notas de trabajo no van dentro del tema."],
+    ["aviso","Pregunta sin respuesta ni la palabra «abierta»","Se guarda sin clave y no se puede corregir. Cada pregunta lleva una cosa o la otra."],
+    ["aviso","Pregunta abierta sin rúbrica","Hay que añadirla: criterio, qué se espera y peso, separados por barras."],
+    ["aviso","Banco sin decir cuántas preguntas extrae","Hay que escribir <code>extraer:</code> en la cabecera."],
+    ["aviso","Banco con menos del doble de preguntas de las que extrae","Dos alumnos verían casi el mismo examen. También avisa si la mezcla pide más de una dificultad de las que hay."],
+    ["aviso","Interactivo sin <code>index.html</code>","El punto de entrada se llama siempre así. Si no, no se puede abrir."],
+    ["aviso","Interactivo que pide algo a una dirección <code>https://</code>","El aula no tiene conexión: la pantalla se queda en blanco. Hay que descargar el archivo y meterlo en la misma carpeta."],
+    ["aviso","Interactivo que usa almacenamiento del navegador","Se sirve desde una dirección que cambia en cada arranque, así que lo guardado se pierde. El estado va en variables normales."],
+    ["aviso","Archivo de más de 40 MB dentro de un interactivo","Hay que sacarlo como video suelto."],
+    ["aviso","Video de más de 300 MB en una lección completa","Hay que comprimirlo o partirlo."],
+    ["aviso","Guion sin título o sin ninguna sección","La lección sale vacía o sin nombre. Cabecera completa y al menos una sección."],
+    ["aviso","Medio citado en el guion que no existe","O con la etiqueta que no corresponde, como un vídeo declarado con un archivo de imagen. El medio no se muestra."],
+    ["aviso","Quiz sin opciones o sin asterisco en la correcta","El quiz no corrige. Las opciones van con guion y un asterisco al final de la buena."],
+    ["aviso","Falta un medio al construir el paquete","El empaquetador sigue adelante con un marcador de posición. Eso no se publica nunca."],
+
+    ["nadie","Escribir país, nivel o grado dentro de <code>curso.txt</code>","Se ignoran sin decir nada; manda la ruta. En la ficha van solo título, materia, idioma, versión y descripción."],
+    ["nadie","Inventar o unificar los tipos del índice para que «quede parejo»","El contenido deja de corresponder al currículo real y el colegio lo nota en la primera revisión. Se usa el nombre real de cada nivel del marco."],
+    ["nadie","Poner un código curricular que no existe","Se empaqueta igual de bien que uno correcto. El error aparece meses después, en una auditoría."],
+    ["nadie","Respuesta larga o con varias formas válidas","«1867» frente a «en 1867»: el alumno falla aunque sepa. Lo que necesite opciones va al quiz del guion, que no da nota."],
+    ["nadie","Peso escrito con decimales","Se toma como 1 sin avisar. Los pesos van enteros."],
+    ["nadie","Cambiar el título de un material ya publicado","Para el sistema es un material nuevo, y el examen anterior deja de poder explicarse. Las erratas se corrigen avisando al equipo técnico."],
+    ["nadie","Usar material con derechos sin resolver","El sistema cifra y firma, pero no comprueba licencias de uso. Ante la duda, material propio."]
+  ];
+
+  var contenedor = document.getElementById("errores");
+  var vacio = document.getElementById("vacio");
+  if (contenedor) {
+    var html = "";
+    for (var i = 0; i < ERRORES.length; i++) {
+      var e = ERRORES[i];
+      html += '<div class="err" data-tipo="' + e[0] + '">' +
+                '<span class="punto p-' + e[0] + '"></span>' +
+                '<div><b>' + e[1] + '</b><span>' + e[2] + '</span></div>' +
+              '</div>';
+    }
+    contenedor.innerHTML = html;
+  }
+
+  var filtros = document.getElementById("filtros");
+  if (filtros) {
+    filtros.addEventListener("click", function(ev){
+      var b = ev.target.closest(".filtro");
+      if (!b) return;
+      var f = b.getAttribute("data-f");
+      var botones = filtros.querySelectorAll(".filtro");
+      for (var i = 0; i < botones.length; i++) {
+        botones[i].setAttribute("aria-pressed", botones[i] === b ? "true" : "false");
+      }
+      var filas = contenedor.querySelectorAll(".err");
+      var visibles = 0;
+      for (var j = 0; j < filas.length; j++) {
+        var ok = (f === "todos") || (filas[j].getAttribute("data-tipo") === f);
+        filas[j].hidden = !ok;
+        if (ok) visibles++;
+      }
+      vacio.hidden = visibles > 0;
+      contenedor.scrollTop = 0;
+    });
+  }
+
+  /* ---------------------------------------------- pestañas */
+  var listaPest = document.querySelectorAll(".pest");
+  for (var t = 0; t < listaPest.length; t++) {
+    listaPest[t].addEventListener("click", function(){
+      var self = this;
+      for (var k = 0; k < listaPest.length; k++) {
+        var sel = listaPest[k] === self;
+        listaPest[k].setAttribute("aria-selected", sel ? "true" : "false");
+        var hoja = document.getElementById(listaPest[k].getAttribute("data-hoja"));
+        if (hoja) hoja.hidden = !sel;
+      }
+    });
+  }
+
+  /* ---------------------------------------------- navegación */
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var riel = document.getElementById("riel");
+  var num = document.getElementById("num");
+  var titulillo = document.getElementById("titulillo");
+  var atras = document.getElementById("atras");
+  var siguiente = document.getElementById("siguiente");
+  var pista = document.getElementById("pista");
+  var deck = document.querySelector(".deck");
+  var actual = 0;
+  var primera = true;
+
+  for (var s = 0; s < slides.length; s++) {
+    (function(idx){
+      var seg = document.createElement("button");
+      seg.className = "seg";
+      seg.type = "button";
+      seg.setAttribute("aria-label", "Ir a " + slides[idx].getAttribute("data-titulo"));
+      seg.addEventListener("click", function(){ ir(idx); });
+      riel.appendChild(seg);
+    })(s);
+  }
+  var segs = riel.querySelectorAll(".seg");
+
+  function dos(n){ return (n < 10 ? "0" : "") + n; }
+
+  function ir(i){
+    if (i < 0 || i >= slides.length) return;
+    if (primera) { primera = false; } else { deck.classList.add("mover"); }
+    slides[actual].classList.remove("is-active");
+    actual = i;
+    slides[actual].classList.add("is-active");
+
+    for (var j = 0; j < segs.length; j++) {
+      segs[j].className = "seg" + (j === actual ? " ahora" : (j < actual ? " hecho" : ""));
+    }
+    num.textContent = dos(actual + 1) + " / " + dos(slides.length);
+    titulillo.textContent = slides[actual].getAttribute("data-titulo");
+    atras.disabled = actual === 0;
+    siguiente.disabled = actual === slides.length - 1;
+    window.scrollTo(0, 0);
+    if (actual > 0 && pista) pista.classList.add("fuera");
+  }
+
+  atras.addEventListener("click", function(){ ir(actual - 1); });
+  siguiente.addEventListener("click", function(){ ir(actual + 1); });
+  document.getElementById("imprimir").addEventListener("click", function(){ window.print(); });
+
+  document.addEventListener("keydown", function(ev){
+    var t = ev.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+    if (ev.key === "ArrowRight" || ev.key === "PageDown") { ir(actual + 1); ev.preventDefault(); }
+    else if (ev.key === "ArrowLeft" || ev.key === "PageUp") { ir(actual - 1); ev.preventDefault(); }
+    else if (ev.key === " " && !ev.shiftKey && t === document.body) { ir(actual + 1); ev.preventDefault(); }
+    else if (ev.key === "Home") { ir(0); ev.preventDefault(); }
+    else if (ev.key === "End") { ir(slides.length - 1); ev.preventDefault(); }
+  });
+
+  var x0 = null, y0 = null;
+  document.addEventListener("touchstart", function(ev){
+    x0 = ev.changedTouches[0].clientX;
+    y0 = ev.changedTouches[0].clientY;
+  }, {passive:true});
+  document.addEventListener("touchend", function(ev){
+    if (x0 === null) return;
+    var dx = ev.changedTouches[0].clientX - x0;
+    var dy = ev.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 62 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+      ir(actual + (dx < 0 ? 1 : -1));
+    }
+    x0 = null; y0 = null;
+  }, {passive:true});
+
+  ir(0);
+})();
+</script>

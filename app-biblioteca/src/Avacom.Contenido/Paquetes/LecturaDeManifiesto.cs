@@ -62,6 +62,22 @@ public sealed class LecturaDeManifiesto(LectorDePaquete lector)
         return a.Length == b.Length && CryptographicOperations.FixedTimeEquals(a, b);
     }
 
+    /// <summary>
+    /// Las preguntas que tienen clave y por tanto se pueden comprobar. Una
+    /// abierta no la tiene: la califica el docente con la rubrica. Devuelve
+    /// referencias, nunca la clave.
+    /// </summary>
+    public ISet<string> Corregibles(string elementoRef)
+    {
+        var salida = new HashSet<string>(StringComparer.Ordinal);
+        using var c = lector.Manifiesto.CreateCommand();
+        c.CommandText = "SELECT pregunta_ref FROM p_pregunta WHERE elemento_ref=$e AND clave_respuesta IS NOT NULL";
+        c.Parameters.AddWithValue("$e", elementoRef);
+        using var r = c.ExecuteReader();
+        while (r.Read()) salida.Add(r.GetString(0));
+        return salida;
+    }
+
     public IReadOnlyList<PasoDeLeccion> Leccion(string elementoRef)
     {
         var lista = new List<PasoDeLeccion>();

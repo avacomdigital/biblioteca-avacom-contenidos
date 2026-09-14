@@ -89,7 +89,7 @@ Cómo lo ve después el LMS
 -------------------------
 
 No lo ve por archivo: lo pregunta por la API local. El contrato completo está
-en CONTRATO-LMS.txt. En resumen, el LMS pide:
+en specsen CONTRATO-LMS.txt. En resumen1-Contrato-Biblioteca-LMS.md y specsen CONTRATO-LMS.txt. En resumen4-api-calls.md. En resumen, el LMS pide:
 
     GET /v1/catalogo?nivel=secundaria&grado=9&asignatura=Humanidades
 

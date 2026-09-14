@@ -5,7 +5,7 @@ Que es cada archivo y por que esta.
 
 Orden de lectura recomendado para alguien que llega nuevo:
 
-    1. LEEME.txt                          que es esto y como se prueba
+    1. README.md                          que es esto, como se prueba y como se compila
     2. esquema/contenido.sql              que se guarda en disco
     3. app-biblioteca/LEEME.txt           mapa del codigo
     4. Avacom.Contenido/Paquetes/         como se abre un paquete
@@ -37,9 +37,19 @@ preparar-trabajo.ps1
     y se copia al final, porque SQLite necesita bloqueo de archivos y en
     unidades de red falla.
 
-LEEME.txt
-    Documento principal. Que es el componente, que instalar, como esta hecho, y
-    las decisiones que ya estan tomadas con su motivo.
+README.md
+    Documento principal. Que es el componente, la estructura del repositorio,
+    que instalar, los comandos de dotnet, el instalador y las decisiones que ya
+    estan tomadas con su motivo. Sustituye al antiguo LEEME.txt.
+
+CONTRIBUTING.md · CHANGELOG.md · .github/PULL_REQUEST_TEMPLATE.md
+    Como se trabaja: ramas, commits, que se revisa en un pull request, y que
+    cambio en cada version.
+
+specs\
+    Toda la documentacion tecnica, numerada en orden de lectura. El 00 es la
+    introduccion y trae el mapa de los demas. Cada documento dice en su
+    cabecera si describe lo que existe o lo que se propone.
 
 ESTANDAR-CONTENIDO.txt
     Para el EQUIPO DE CONTENIDO. El estandar completo: el arbol de carpetas,
@@ -47,10 +57,8 @@ ESTANDAR-CONTENIDO.txt
     una evaluacion, las seis reglas de los interactivos en HTML y las cuatro
     que se pagan caro. Se puede entregar suelto.
 
-CONTRATO-LMS.txt
-    Para el OTRO equipo. Como encuentra el LMS a este componente, los cinco
-    puntos de enlace, la forma exacta de cada respuesta y las cinco reglas que
-    hay que respetar. Se puede entregar suelto: no obliga a leer este codigo.
+(El antiguo CONTRATO-LMS.txt es ahora specs\01-Contrato-Biblioteca-LMS.md y
+specs\04-api-calls.md. Se pueden entregar sueltos al equipo del LMS.)
 
 INVENTARIO.txt
     Este archivo.

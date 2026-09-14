@@ -205,6 +205,95 @@ public class ApiLocalTests : IDisposable
         Assert.Equal(400, (int)r.StatusCode);
     }
 
+    // ------------------------------------------------------------- cursos
+
+    /// <summary>
+    /// Lo que el LMS pinta en su seccion de asignaturas. Un curso es un paquete:
+    /// no hay una entidad aparte y no hace falta inventarla.
+    /// </summary>
+    [Fact]
+    public void Los_cursos_traen_lo_que_el_LMS_necesita_para_pintarlos()
+    {
+        var c = Get("/v1/cursos").GetProperty("cursos").EnumerateArray().Single();
+
+        foreach (var campo in new[] { "curso_ref", "titulo", "version_vigente", "pais",
+                                      "nivel", "grado", "asignatura", "idioma",
+                                      "lecciones", "elementos", "actualizado_en" })
+            Assert.True(c.TryGetProperty(campo, out _), $"falta el campo {campo}");
+
+        // curso_ref es la clave del paquete, que es lo estable entre versiones.
+        Assert.Equal("co-sec-8-mat", c.GetProperty("curso_ref").GetString());
+        Assert.Equal("secundaria", c.GetProperty("nivel").GetString());
+        Assert.Equal("8", c.GetProperty("grado").GetString());
+        Assert.Equal(2, c.GetProperty("elementos").GetInt32());
+    }
+
+    [Fact]
+    public void Un_curso_sin_nada_visible_no_se_ofrece()
+    {
+        Assert.Single(Get("/v1/cursos").GetProperty("cursos").EnumerateArray());
+
+        // Si la escuela desactiva todo lo que el curso trae, el curso desaparece.
+        // Ofrecerlo vacio seria peor: el profesor lo abre y no encuentra nada,
+        // sin ninguna explicacion de por que.
+        Instalador.Politica(_indice, "asignatura", "Matematicas", "deshabilitar");
+        Assert.Empty(Get("/v1/cursos").GetProperty("cursos").EnumerateArray());
+
+        Instalador.QuitarPoliticas(_indice);
+        Assert.Single(Get("/v1/cursos").GetProperty("cursos").EnumerateArray());
+    }
+
+    [Fact]
+    public void Un_curso_se_abre_por_su_referencia_y_trae_sus_secciones()
+    {
+        var d = Get("/v1/curso/co-sec-8-mat");
+        Assert.Equal("co-sec-8-mat", d.GetProperty("curso_ref").GetString());
+        Assert.False(string.IsNullOrWhiteSpace(d.GetProperty("huella").GetString()));
+
+        var sec = d.GetProperty("secciones").EnumerateArray().Single();
+
+        // El codigo de la seccion es su taxonomia_ref. Es lo estable entre
+        // versiones, y es lo unico que permite que el progreso de un alumno
+        // sobreviva a que se republique el curso.
+        Assert.Equal("co-sec-mat-var", sec.GetProperty("codigo").GetString());
+        Assert.Equal("pensamiento", sec.GetProperty("tipo").GetString());
+        Assert.Equal(2, sec.GetProperty("items").GetArrayLength());
+
+        var item = sec.GetProperty("items").EnumerateArray().First();
+        foreach (var campo in new[] { "orden", "tipo", "elemento_ref", "titulo", "version" })
+            Assert.True(item.TryGetProperty(campo, out _), $"falta el campo {campo}");
+    }
+
+    [Fact]
+    public void Un_curso_que_no_existe_da_404()
+        => Assert.Equal(404, (int)_http.GetAsync(_api.Base + "/v1/curso/no-existe").Result.StatusCode);
+
+    [Fact]
+    public void La_salud_declara_las_capacidades()
+    {
+        var s = Get("/v1/salud");
+        var caps = s.GetProperty("capacidades").EnumerateArray().Select(x => x.GetString()).ToList();
+
+        // Solo se declara lo que responde de verdad. Declarar una capacidad que
+        // todavia no esta implementada es peor que no declararla: el LMS la usa.
+        Assert.Contains("curso", caps);
+        Assert.Equal(1, s.GetProperty("cursos").GetInt32());
+    }
+
+    [Fact]
+    public void Ningun_curso_revela_donde_vive_el_paquete()
+    {
+        // Misma regla que el catalogo: si el LMS supiera la ruta, acabaria
+        // abriendo el archivo por su cuenta, saltandose cifrado y politica.
+        foreach (var ruta in new[] { "/v1/cursos", "/v1/curso/co-sec-8-mat" })
+        {
+            var texto = _http.GetStringAsync(_api.Base + ruta).Result;
+            Assert.DoesNotContain("ruta", texto, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("paquetes\\\\", texto, StringComparison.OrdinalIgnoreCase);
+            Assert.DoesNotContain("PQ1", texto, StringComparison.Ordinal);
+        }
+    }
+
     // -------------------------------------------------- retirar contenido
 
     /// <summary>

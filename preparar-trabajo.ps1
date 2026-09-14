@@ -66,7 +66,7 @@ try {
         Write-Host "    ya existe"
     } else {
         Invocar-Python avacom_empaquetador.py claves | Out-Null
-        Write-Host "    generado (claves de desarrollo, ver LEEME.txt)"
+        Write-Host "    generado (claves de desarrollo, ver README.md)"
     }
 
     Write-Host "2 - se construyen los dos paquetes de ejemplo"

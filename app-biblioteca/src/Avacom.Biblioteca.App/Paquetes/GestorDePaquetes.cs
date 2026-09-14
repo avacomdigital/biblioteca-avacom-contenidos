@@ -20,7 +20,18 @@ public sealed class GestorDePaquetes(BaseDeIndice indice) : IDisposable
     public Licencia? Licencia { get; set; }
     public byte[]? NodoPrivada { get; set; }
 
+    /// <summary>
+    /// Cerrojo: la API local (hilos del servidor) y la interfaz (hilo principal)
+    /// llegan aqui a la vez, y el diccionario no es seguro para hilos.
+    /// </summary>
+    private readonly object _cerrojo = new();
+
     public LectorDePaquete Abrir(string paqueteId)
+    {
+        lock (_cerrojo) return AbrirSinCerrojo(paqueteId);
+    }
+
+    private LectorDePaquete AbrirSinCerrojo(string paqueteId)
     {
         if (_abiertos.TryGetValue(paqueteId, out var y)) return y;
 
@@ -53,8 +64,11 @@ public sealed class GestorDePaquetes(BaseDeIndice indice) : IDisposable
 
     public void Dispose()
     {
-        foreach (var l in _abiertos.Values) l.Dispose();
-        _abiertos.Clear();
+        lock (_cerrojo)
+        {
+            foreach (var l in _abiertos.Values) l.Dispose();
+            _abiertos.Clear();
+        }
         if (NodoPrivada is not null)
             System.Security.Cryptography.CryptographicOperations.ZeroMemory(NodoPrivada);
     }

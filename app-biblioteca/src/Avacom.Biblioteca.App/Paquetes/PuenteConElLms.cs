@@ -23,9 +23,20 @@ namespace Avacom.Biblioteca.App;
 public sealed class PuenteConElLms : IDisposable
 {
     private readonly BaseDeIndice _indice;
+    private readonly IFuenteDeContenido _fuente;
     private ApiLocal? _api;
 
-    public PuenteConElLms(BaseDeIndice indice) => _indice = indice;
+    /// <summary>
+    /// La fuente de contenido es lo que permite publicar las capacidades
+    /// opcionales (medio, leccion, evaluacion, comprobar, voz): el mismo
+    /// resolutor que usa el visor, asi que la politica y el cifrado se aplican
+    /// igual venga la peticion de la pantalla o del LMS.
+    /// </summary>
+    public PuenteConElLms(BaseDeIndice indice, Avacom.Contenido.Medios.ResolutorDeMedios resolutor, GestorDePaquetes gestor)
+    {
+        _indice = indice;
+        _fuente = new FuenteDeContenido(resolutor, gestor.Abrir);
+    }
 
     public Action<string>? AlPedirMostrar { get; set; }
 
@@ -35,7 +46,7 @@ public sealed class PuenteConElLms : IDisposable
     public void Encender()
     {
         if (_api is not null) return;
-        _api = new ApiLocal(_indice, Mostrar);
+        _api = new ApiLocal(_indice, Mostrar, fuente: _fuente);
     }
 
     /// <summary>
